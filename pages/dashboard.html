@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institución Educativa ABC · Dashboard Principal</title>
+    <link rel="stylesheet" href="../styles/dashboard.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- div: Contenedor genérico para agrupar elementos y aplicarles estilos; class="dashboard": La clase "dashboard" identifica el contenedor al darle estilo a través del CSS. -->
+    <div class="dashboard">
+
+        <!-- aside: Define una sección que complementa el contenido principal, como una barra lateral (menú); class="sidebar": Indica que es la barra lateral del menú -->
+        <aside class="sidebar">
+
+            <!-- div con clase "sidebar-bg": Es un contenedor para la imagen de fondo de la barra lateral. El atributo "style" aplica estilos directamente ahí. En este caso, pone una imagen de fondo. -->
+            <div class="sidebar-bg" style="background-image: url('img/sidebar-bg.jpg');"></div>
+
+            <!-- div con clase "sidebar-content": Es todo el contenido visible de la barra lateral (el escudo, el menú, el botón de cerrar sesión). Se coloca encima de la imagen de fondo. -->
+            <div class="sidebar-content">
+
+                <!-- div con clase "sidebar-header": Agrupa el encabezado de la barra lateral, que en este caso es solo el escudo de la institución. -->
+                <div class="sidebar-header">
+                    <!-- img: Inserta imagen; src es la ruta del archivo, alt es un texto que muestra si la imagen no carga; class="sidebar-escudo": Para darle estilo con CSS. -->
+                    <img src="../images/escudo.png" alt="Escudo ABC" class="sidebar-escudo">
+                </div>
+
+                <!-- nav: Define la sección de navegación con enlaces o botones del menú. -->
+                <nav class="sidebar-menu">
+                    <!-- ul: Lista no ordenada (viñetas); li: Elemento de la lista (cada opción del menú). -->
+                    <ul>
+                        <!-- class="menu-item active": "menu-item" es la clase para dar estilo; "active" indica que en esta opción está actualmente; data-path="dashboard": Atributo personalizado que puede ser usado por JavaScript para identificar a qué pantalla navegar. -->
+                        <li class="menu-item active" data-path="dashboard">
+                            <!-- Icono de la opción del menú. alt vacío ("") significa que es una imagen decorativa -->
+                            <img src="../images/dashboard.png" alt="" class="menu-icon">
+                            <!-- span: Contenedor de texto en línea. -->
+                            <span>Dashboard Principal</span>
+                        </li>
+                        <!-- Las siguientes opciones del menú siguen la misma estructura que la anterior. No tienen la clase "active", por lo que se ven como opciones no seleccionadas. -->
+                        <li class="menu-item " data-path="cursos">
+                            <img src="../images/gestioncursos.png" alt="" class="menu-icon">
+                            <span>Gestión de Cursos</span>
+                        </li>
+                        <li class="menu-item" data-path="docentes">
+                            <img src="../images/gestiondocentes.png" alt="" class="menu-icon">
+                            <span>Gestión de Docentes</span>
+                        </li>
+                        <li class="menu-item" data-path="lecciones">
+                            <img src="../images/contenido.png" alt="" class="menu-icon">
+                            <span>Lecciones y Contenidos</span>
+                        </li>
+                        <li class="menu-item" data-path="admin">
+                            <img src="../images/administrador.png" alt="" class="menu-icon">
+                            <span>Módulo Administrador</span>
+                        </li>
+                    </ul>
+                </nav>
+
+                <!-- div con clase "sidebar-footer": Pie de la barra lateral, donde va el botón de cerrar sesión. -->
+                <div class="sidebar-footer">
+                    <!-- div con clase "cerrar-sesion": Contiene el icono y el texto de la opción "Cerrar Sesión". -->
+                    <div class="cerrar-sesion">
+                        <img src="../images/sesion.png" alt="" class="menu-icon">
+                        <span>Cerrar Sesión</span>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+         <!-- main: Define el contenido principal de la página. Debe ser único y representa la parte central de lo que se quiere mostrar; class="main-content": Para dar estilo con CSS. -->
+        <main class="main-content">
+
+            <!-- header: Define la cabecera de la sección principal, que contiene el menú de hamburguesa, las notificaciones y el perfil del usuario. -->
+            <header class="main-header">
+
+                <!-- div con clase "header-left": Agrupa elementos que van a la izquierda de la cabecera. -->
+                <div class="header-left">
+                    <!-- Imagen que parece un icono de cuadrícula. -->
+                    <img src="../images/cuad.png" alt="Menú" class="icon-grid">
+                </div>
+                
+                <!-- div con clase "header-right": Agrupa elementos que van a la derecha de la cabecera 
+                    (notificaciones y avatar del usuario). -->
+                <div class="header-right">
+
+                    <!-- div con clase "notificacion": Contiene el icono de la campana y el contador de notificaciones. -->
+                    <div class="notificacion">
+                        <img src="../images/notificacion.png" class="icon-notification">
+                        <!-- span con clase "notificacion-badge": Es el círculo rojo con el número 3, que indica cuántas notificaciones nuevas hay. -->
+                        <span class="notificacion-badge">3</span>
+                    </div>
+
+                    <!-- div con clase "avatar-container": Agrupa la imagen del usuario, su nombre y un icono de flecha. -->
+                    <div class="avatar-container">
+                        <img src="../images/hacker.png" alt="User Pérez" class="avatar-img">
+                        <span class="avatar-nombre">User Pérez</span>
+                        <img src="../images/aba.png" alt="" class="icon-chevron">
+                    </div>                   
+
+                </div>
+            </header>
+
+            <!-- section: Define una sección temática. En este caso, es la sección de bienvenida. -->
+            <section class="welcome-section">
+                <!-- div con clase "welcome-text": Contiene el texto de bienvenida. -->
+                <div class="welcome-text">
+                    <!-- h1: Es el título más importante de la página. Normalmente solo debe haber uno. -->
+                    <h1>Bienvenido de nuevo, <span class="text-regular">User Pérez</span></h1>
+                    <p>Administre fácilmente los cursos y docentes.</p>
+                </div>
+            </section>
+
+            <!-- Otra sección: Aquí se muestran las tarjetas de Estudiantes y Docentes, junto con una ilustración grande. -->
+            <section class="dashboard-display">
+
+                <!-- div con clase "cards-container": Contenedor para agrupar las dos tarjetas. -->
+                <div class="cards-container">
+
+                    <!-- div con clase "info-card purple-card": Tarjeta de información de Estudiantes.
+                        "purple-card" le da un color de fondo morado. -->
+                    <div class="info-card purple-card">
+                        <!-- span vacío, posiblemente para algún detalle decorativo. -->
+                        <span class="card-tag"></span>
+                        <h3>Estudiantes</h3>
+                        <img src="../images/alumno.png" alt="" class="card-img">
+                        <p class="card-desc">Consultar y revisar los cursos en los que se han registrado.</p>
+                        
+                        <!-- div con clase "card-stats": Contiene las estadísticas de la tarjeta. -->
+                        <div class="card-stats">
+                            <div class="stat"><img src="../images/persAzul.png" alt=""> 140 Estudiantes</div>
+                            <div class="stat"><img src="../images/agenda.png" alt=""> 320 Cursos Cargos</div>
+                        </div>
+                        <!-- button: Botón interactivo; class="btn-card purple": Estilo de botón con color morado. -->
+                        <button class="btn-card purple">Ver ></button>
+                    </div>
+
+                    <!-- Tarjeta de Docentes, similar a la anterior, pero con clase "cyan-card" (color celeste). -->
+                    <div class="info-card cyan-card">
+                        <h3>Docentes</h3>
+                        <span class="card-tag">
+                             <img src="../images/maestro.png" alt="" class="card-img">
+                        </span>
+                        <p class="card-desc">Ver y consultar los cursos que debes impartir.</p>
+                        <div class="card-stats">
+                            <div class="stat"><img src="../images/cursos.png" alt=""> 8 Docentes</div>
+                            <div class="stat"><img src="../images/agendaVerd.png" alt=""> 24 Cursos Asignados</div>
+                        </div>
+                        <button class="btn-card cyan">Ver ></button>
+                    </div>
+                </div>
+
+                <!-- div con clase "main-illustration-container": Contiene la ilustración grande del dashboard. -->
+                <div class="main-illustration-container">
+                    <img src="../images/ilustracion2.png" alt="Dashboard Illustration" class="main-illus">
+                </div>
+
+            </section>
+        </main>
+    </div>
+
+    <!-- script: Conecta el archivo JavaScript para añadir interactividad a la página -->
+    <script src="script.js"></script>
+</body>
+</html>
