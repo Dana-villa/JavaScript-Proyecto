@@ -1,16 +1,11 @@
-/* Variables de colores para todo el proyecto 
-   (así es fácil cambiar colores en un solo lugar) */
 :root {
-    --sidebar-bg: #1a2537; /* Azul oscuro profundo */
-    --main-bg: #ffffff;
-    --text-main: #000000;
-    --text-muted: #6b7280;
-    --accent-blue: #1e5ba0;
-    --card-purple: #e9e5ff;
-    --card-cyan: #e0f7f9;
+    --main-bg: #ffffff; /* Blanco para fondos principales */
+    --text-main: #000000; /* Negro para el texto principal */
+    --text-muted: #6b7280; /* Gris suave para textos secundarios o menos importantes */
+    --accent-blue: #1e5ba0; /* Azul que se usa para detalles o acentos */
+    --card-purple: #e9e5ff; /* Morado muy claro, para el fondo de la tarjeta de estudiantes */
+    --card-cyan: #e0f7f9; /* Celeste muy claro, para el fondo de la tarjeta de docentes */
 }
-
-/* Reset: quitamos márgenes y padding por defecto */
 * {
     margin: 0;
     padding: 0;
@@ -18,24 +13,20 @@
     font-family: 'Inter', sans-serif;
 }
 
-/* ===== CONTENEDOR PRINCIPAL ===== */
-/* Hacemos que el menú lateral y el contenido estén uno al lado del otro */
 .dashboard {
     display: flex;
-    min-height: 100vh; /* Ocupa todo el alto de la pantalla */
+    min-height: 100vh;
     width: 100%;
 }
 
-/* ===== MENÚ LATERAL (SIDEBAR) ===== */
 .sidebar {
     width: 280px;
     position: relative;
     color: white;
-    flex-shrink: 0; /* Evita que se encoja */
+    flex-shrink: 0;
     box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Fondo con imagen del menú lateral */
 .sidebar-bg {
     position: absolute;
     top: 0;
@@ -44,11 +35,10 @@
     height: 100%;
     background-size: cover;
     background-position: center;
-    opacity: 0.7;
+    opacity: 0;
     z-index: 0;
 }
 
-/* Contenido que va encima de la imagen de fondo */
 .sidebar-content {
     position: relative;
     z-index: 2;
@@ -57,10 +47,9 @@
     height: 100%;
     padding: 2rem 1.5rem;
     background: url(../images/lateral.jpg);
-    backdrop-filter: brightness(0.8); /* Oscurece un poco el fondo */
+    backdrop-filter: brightness(0.8);
 }
 
-/* Encabezado del menú con el escudo */
 .sidebar-header {
     display: flex;
     align-items: right;
@@ -71,10 +60,9 @@
 .sidebar-escudo {
     width: 250px;
     height: auto;
-    filter: brightness(1.1); /* Un poco más brillante */
+    filter: brightness(1.1);
 }
 
-/* Menú de navegación */
 .sidebar-menu {
     flex: 1;
 }
@@ -86,7 +74,6 @@
     gap: 0.5rem;
 }
 
-/* Cada opción del menú */
 .menu-item {
     display: flex;
     align-items: center;
@@ -100,20 +87,17 @@
     color: rgba(255, 255, 255, 0.85);
 }
 
-/* Opción activa (donde está el usuario) */
 .menu-item.active {
     color: white;
     background: rgba(255, 255, 255, 0.12);    
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
-/* Efecto cuando pasas el mouse */
 .menu-item:hover {
     background: rgba(255, 255, 255, 0.08);
     color: white;
 }
 
-/* Iconos del menú */
 .menu-icon {
     width: 24px;
     height: 24px;
@@ -121,13 +105,11 @@
     filter: brightness(0.9);
 }
 
-/* Parte de abajo del menú (cerrar sesión) */
 .sidebar-footer {
     margin-top: auto;
     padding-top: 2rem;
 }
 
-/* Botón de cerrar sesión */
 .cerrar-sesion {
     display: flex;
     align-items: center;
@@ -145,32 +127,33 @@
     color: white;
 }
 
-/* ===== CONTENIDO PRINCIPAL ===== */
 .main-content {
-    flex: 1; /* Ocupa el espacio restante */
-    overflow-y: auto; /* Permite hacer scroll si hay mucho contenido */
+    flex: 1;
+    overflow-y: auto;
 }
 
 .container {
     padding: 2rem 2rem;
 }
 
-/* ===== ENCABEZADO SUPERIOR ===== */
 .main-header {
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: center; /* Cambiar a center para mejor alineación vertical */
     margin-bottom: 2rem;
     background-color: rgb(255, 255, 255);
+    width: 100%;
 }
 
-/* Parte izquierda del encabezado */
 .header-left {
     display: flex;
     gap: 1.5rem;
 }
 
-/* Icono de cuadrícula (menú) */
+.header-left-placeholder {
+    flex: 1; /* Toma el espacio disponible y empuja header-right hacia la derecha */
+}
+
 .icon-grid {
     width: 60px;
     height: 60px;
@@ -185,21 +168,19 @@
     opacity: 1;
 }
 
-/* Títulos del encabezado */
 .header-titles {
     display: flex;
     flex-direction: column;
 }
 
-/* Parte derecha del encabezado (notificaciones y avatar) */
 .header-right {
     display: flex;
     align-items: center;
     gap: 2rem;
     padding: 1rem 2rem;
+    margin-left: auto; /* Forzar alineación a la derecha como respaldo */
 }
 
-/* Campanita de notificaciones */
 .notificacion {
     position: relative;
     cursor: pointer;
@@ -210,7 +191,6 @@
     height: 28px;
 }
 
-/* Numerito rojo de notificaciones */
 .notificacion-badge {
     position: absolute;
     top: -5px;
@@ -223,7 +203,6 @@
     border: 2px solid white;
 }
 
-/* Información del usuario */
 .avatar-container {
     display: flex;
     align-items: center;
@@ -245,171 +224,17 @@
     color: #333;
 }
 
-/* Flechita para desplegar menú */
 .icon-chevron {
     width: 14px;
     opacity: 0.6;
 }
 
-/* ===== SECCIÓN DE BIENVENIDA ===== */
-.welcome-section {
-    padding: 1rem 3rem;
-    margin-bottom: 1rem;
-}
-
-.welcome-text h1 {
-    font-size: 2.2rem;
-    color: #000;
-    font-weight: 700;
-}
-
-.welcome-text .text-regular {
-    font-weight: 400; /* Para texto normal */
-}
-
-.welcome-text p {
-    color: var(--text-muted);
-    margin-top: 0.5rem;
-    font-size: 1.1rem;
-}
-
-/* ===== ÁREA DE TARJETAS E ILUSTRACIÓN ===== */
-.dashboard-display {
-    padding: 3rem 3rem;
-    margin-left: 40px;
-    margin-right: 40px;
-    border-radius: 20px;
-    display: flex;
-    gap: 2rem;
-    align-items: flex-start;
-    position: relative;
-    background-image: url(../images/fondo2.png);
-}
-
-/* Contenedor de las tarjetas */
-.cards-container {
-    display: flex;
-    gap: 1.5rem;
-    z-index: 1;
-}
-
-/* ===== ESTILO DE CADA TARJETA ===== */
-.info-card {
-    background: white;
-    border-radius: 20px;
-    padding: 1.5rem;
-    width: 350px;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-    position: relative;
-    overflow: hidden;
-    transition: transform 0.3s ease;
-}
-
-/* Efecto flotante al pasar el mouse */
-.info-card:hover {
-    transform: translateY(-5px);
-}
-
-/* Colores de fondo para cada tipo de tarjeta */
-.purple-card {
-    background: linear-gradient(to bottom, #f3f0ff 0%, #ffffff 40%);
-    border: 1px solid #e9e5ff;
-}
-
-.cyan-card {
-    background: linear-gradient(to bottom, #e0f7f9 0%, #ffffff 40%);
-    border: 1px solid #cff1f4;
-}
-
-/* Títulos de las tarjetas */
-.info-card h3 {
-    font-size: 1.3rem;
-    color: #2d3748;
-    margin-bottom: 0.5rem;
-    position: relative;
-}
-
-/* Imágenes dentro de las tarjetas */
-.card-img {
-    width: 150px;
-    height: auto;
-    display: block;
-    margin: 1rem 0;
-}
-
-/* Descripción de la tarjeta */
-.card-desc {
-    font-size: 0.85rem;
-    color: #718096;
-    line-height: 1.4;
-    margin-bottom: 1.5rem;
-    min-height: 40px;
-}
-
-/* Estadísticas (ej: número de estudiantes) */
-.card-stats {
-    display: flex;
-    flex-direction: column;
-    gap: 0.8rem;
-    margin-bottom: 1.5rem;
-}
-
-.stat {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #4a5568;
-}
-
-.stat img {
-    width: 20px;
-}
-
-/* Botones dentro de las tarjetas */
-.btn-card {
-    width: 100%;
-    padding: 0.8rem;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: opacity 0.2s;
-}
-
-.btn-card.purple {
-    background-color: #c3baff;
-    color: #5a4fcf;
-}
-
-.btn-card.cyan {
-    background-color: #b2ebf2;
-    color: #00838f;
-}
-
-/* ===== ILUSTRACIÓN PRINCIPAL ===== */
-.main-illustration-container {
-    flex: 1;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-/* Imagen grande al lado de las tarjetas */
-.main-illus {
-    max-width: 500px;
-    width: 100%;
-    height: auto;
-    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1)); /* Sombra suave */
-}
-
-/* ===== DISEÑO ADAPTABLE (RESPONSIVE) ===== */
-/* Cuando la pantalla es más angosta que 1200px */
 @media (max-width: 1200px) {
+    
     .dashboard-display {
-        flex-direction: column; /* Tarjetas arriba, ilustración abajo */
+        flex-direction: column;
     }
+    
     .main-illustration-container {
         justify-content: center;
         width: 100%;
