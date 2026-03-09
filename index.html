@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Institución Educativa ABC · Catálogo de Cursos</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles/index.css">
+</head>
+<body>
+
+<div class="dashboard">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+        <div class="sidebar-bg"></div>
+        <div class="sidebar-content">
+
+            <div class="sidebar-header">
+                <img src="../images/escudo.png" alt="Escudo de la Institución Educativa ABC" class="sidebar-escudo">
+            </div>
+
+            <nav class="sidebar-menu">
+                <ul>
+                    <li class="menu-item" data-path="dashboard">
+                        <img src="../images/dashboard.png" alt="" class="menu-icon">
+                        <span>Dashboard<br>Principal</span>
+                    </li>
+                    <li class="menu-item active" data-path="cursos">
+                        <img src="../images/gestioncursos.png" alt="" class="menu-icon">
+                        <span>Gestión de<br>Cursos</span>
+                    </li>
+                    <li class="menu-item" data-path="docentes">
+                        <img src="../images/gestiondocentes.png" alt="" class="menu-icon">
+                        <span>Gestión de<br>Docentes</span>
+                    </li>
+                    <li class="menu-item" data-path="lecciones">
+                        <img src="../images/contenido.png" alt="" class="menu-icon">
+                        <span>Lecciones y<br>Contenidos</span>
+                    </li>
+                    <li class="menu-item" data-path="admin">
+                        <img src="../images/administrador.png" alt="" class="menu-icon">
+                        <span>Modulo<br>Administrador</span>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="cerrar-sesion">
+                    <img src="../images/sesion.png" alt="" class="menu-icon">
+                    <span>Cerrar Sesión</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main-content">
+
+        <!-- Botones Iniciar Sesión / Registrar -->
+        <header class="main-header">
+            <div class="header-actions">
+                <button class="btn-login">Iniciar Sesión</button>
+                <button class="btn-register">Registrar</button>
+            </div>
+        </header>
+
+        <!-- Contenido del catálogo -->
+        <div class="container">
+
+            <h1 class="catalog-title">Catálogo de Cursos</h1>
+
+            <!-- Buscador -->
+            <div class="search-wrapper">
+                <input type="text" class="search-input" placeholder="Buscar cursos...">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                </svg>
+            </div>
+
+            <!-- Grid de tarjetas -->
+            <div class="courses-grid">
+
+                <!-- Tarjeta 1 -->
+                <article class="course-card">
+                    <div class="course-card__thumbnail">
+                        <img src="./images/desarrollo-web.webp" alt="Curso de Desarrollo Web">
+                    </div>
+                    <div class="course-card__body">
+                        <h3 class="course-card__title">Curso de Desarrollo Web</h3>
+                        <p class="course-card__desc">Introducción a HTML, CSS y fundamentos digitales</p>
+                    </div>
+                </article>
+
+                <!-- Tarjeta 2 -->
+                <article class="course-card">
+                    <div class="course-card__thumbnail">
+                        <img src="./images/js.webp" alt="Curso de JavaScript">
+                    </div>
+                    <div class="course-card__body">
+                        <h3 class="course-card__title">Curso de JavaScript</h3>
+                        <p class="course-card__desc">Aprende JavaScript desde cero, el lenguaje de programación más popular para desarrollo web</p>
+                    </div>
+                </article>
+
+                <!-- Tarjeta 3 -->
+                <article class="course-card">
+                    <div class="course-card__thumbnail">
+                        <img src="./images/ai.webp" alt="Introducción a la Inteligencia Artificial">
+                    </div>
+                    <div class="course-card__body">
+                        <h3 class="course-card__title">Introducción a la Inteligencia Artificial</h3>
+                        <p class="course-card__desc">Aprende los conceptos básicos de la inteligencia artificial y cómo se aplica en el mundo real</p>
+                    </div>
+                </article>
+
+                <!-- Tarjeta 4 -->
+                <article class="course-card">
+                    <div class="course-card__thumbnail">
+                        <img src="./images/cyber-security.webp" alt="Curso Avanzado de Ciberseguridad">
+                    </div>
+                    <div class="course-card__body">
+                        <h3 class="course-card__title">Curso Avanzado de Ciberseguridad</h3>
+                        <p class="course-card__desc">Aprende técnicas avanzadas para proteger tus sistemas y datos</p>
+                    </div>
+                </article>
+
+                <!-- Tarjeta 5 -->
+                <article class="course-card">
+                    <div class="course-card__thumbnail">
+                        <img src="./images/digital-marketing.webp" alt="Análisis de Datos con Python">
+                    </div>
+                    <div class="course-card__body">
+                        <h3 class="course-card__title">Análisis de Datos con Python</h3>
+                        <p class="course-card__desc">Aprende a analizar datos utilizando Python y sus bibliotecas</p>
+                    </div>
+                </article>
+
+                <!-- Tarjeta 6 -->
+                <article class="course-card">
+                    <div class="course-card__thumbnail">
+                        <img src="./images/uiux.webp" alt="Marketing Digital">
+                    </div>
+                    <div class="course-card__body">
+                        <h3 class="course-card__title">Marketing Digital</h3>
+                        <p class="course-card__desc">Aprende estrategias de marketing digital para promocionar tu negocio en línea</p>
+                    </div>
+                </article>
+
+                <!-- Tarjeta 7 -->
+                <article class="course-card">
+                    <div class="course-card__thumbnail">
+                        <img src="./images/db.webp" alt="Diseño UX/UI">
+                    </div>
+                    <div class="course-card__body">
+                        <h3 class="course-card__title">Diseño UX/UI</h3>
+                        <p class="course-card__desc">Aprende los principios de diseño UX/UI para crear experiencias digitales atractivas</p>
+                    </div>
+                </article>
+
+                <!-- Tarjeta 8 -->
+                <article class="course-card">
+                    <div class="course-card__thumbnail">
+                        <img src="./images/mobile-dev.webp" alt="Introducción a las bases de datos">
+                    </div>
+                    <div class="course-card__body">
+                        <h3 class="course-card__title">Introducción a las bases de datos</h3>
+                        <p class="course-card__desc">Aprende los conceptos básicos de las bases de datos y cómo gestionarlas</p>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </main>
+</div>
+
+<script src="script.js"></script>
+</body>
+</html>
