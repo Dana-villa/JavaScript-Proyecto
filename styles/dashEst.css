@@ -2,24 +2,26 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-}
-
-body {
     font-family: 'Inter', sans-serif;
-    background-color: #f5f7fa;
-    color: #1e293b;
 }
 
 .dashboard {
     display: flex;
     min-height: 100vh;
+    width: 100%;
+}
+
+.container{
+    background-color: white;
 }
 
 /* Sidebar Styles (manteniendo similar) */
 .sidebar {
-    width: 280px;
+   width: 280px;
     position: relative;
     color: white;
+    flex-shrink: 0;
+    box-shadow: 4px 0 20px rgba(0, 0, 0, 0.2);
 }
 
 .sidebar-bg {
@@ -30,69 +32,72 @@ body {
     height: 100%;
     background-size: cover;
     background-position: center;
+    opacity: 0;
     z-index: 0;
-}
-
-.sidebar-bg::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, rgba(25, 48, 95, 0.95) 0%, rgba(42, 67, 120, 0.95) 100%);
 }
 
 .sidebar-content {
     position: relative;
-    z-index: 1;
-    padding: 2rem 1.5rem;
-    height: 100%;
+    z-index: 2;
     display: flex;
     flex-direction: column;
+    height: 100%;
+    padding: 2rem 1.5rem;
+    background: url(../images/lateral.jpg);
+    backdrop-filter: brightness(0.8);
 }
 
 .sidebar-header {
-    margin-bottom: 2rem;
-    text-align: center;
+    display: flex;
+    align-items: right;
+    gap: 1rem;
+    margin-bottom: 3rem;
 }
 
 .sidebar-escudo {
-    width: 80px;
+    width: 250px;
     height: auto;
-    filter: brightness(0) invert(1);
+    filter: brightness(1.1);
+}
+
+.sidebar-menu {
+    flex: 1;
 }
 
 .sidebar-menu ul {
     list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .menu-item {
     display: flex;
     align-items: center;
-    padding: 0.875rem 1rem;
-    margin-bottom: 0.5rem;
-    border-radius: 10px;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
     cursor: pointer;
-    transition: all 0.3s ease;
-    color: rgba(255, 255, 255, 0.8);
+    transition: background var(--transition-base), transform 0.1s;
+    font-weight: 500;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .menu-item:hover {
-    background-color: rgba(255, 255, 255, 0.1);
+    background-color: rgba(255, 255, 255, 0.08);
     color: white;
 }
 
 .menu-item.active {
-    background-color: rgba(255, 255, 255, 0.15);
     color: white;
-    font-weight: 500;
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .menu-icon {
-    width: 22px;
-    height: 22px;
-    margin-right: 12px;
+    width: 24px;
+    height: 24px;
     filter: brightness(0) invert(1);
     opacity: 0.9;
 }
@@ -100,17 +105,18 @@ body {
 .sidebar-footer {
     margin-top: auto;
     padding-top: 2rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .cerrar-sesion {
     display: flex;
     align-items: center;
-    padding: 0.875rem 1rem;
-    border-radius: 10px;
+    gap: 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
     cursor: pointer;
-    color: rgba(255, 255, 255, 0.8);
-    transition: all 0.3s ease;
+    color: rgba(255, 255, 255, 0.7);
+    font-weight: 500;
+    transition: background var(--transition-base);
 }
 
 .cerrar-sesion:hover {
@@ -125,16 +131,20 @@ body {
 }
 
 .main-header {
-    background-color: white;
-    padding: 1.5rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid #e2e8f0;
+    background-color: white;
+    width: 100%;
+    border-bottom: 1px solid #eef0f5;
 }
 
-.header-left {
-    flex: 1;
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 1rem 2rem;
+    margin-left: auto;
 }
 
 .page-title {
@@ -192,7 +202,7 @@ body {
 }
 
 .avatar-container:hover {
-    background-color: #f1f5f9;
+    background-color:trans;
 }
 
 .avatar-img {
@@ -252,7 +262,8 @@ body {
 }
 
 .notification-card {
-    background-color: white;
+    background: linear-gradient(to bottom, #c65be7 0%, #ffffff 40%);
+    border: 1px solid #e9e5ff; ;
     border-radius: 16px;
     padding: 1.25rem;
     display: flex;
@@ -268,13 +279,13 @@ body {
 }
 
 .notification-card.urgent {
-    border-left: 4px solid #ef4444;
+    border-left: 4px solid #a539ee;
 }
 
 .notification-icon {
     width: 48px;
     height: 48px;
-    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
+    background: transparent;
     border-radius: 12px;
     display: flex;
     align-items: center;
@@ -320,7 +331,8 @@ body {
 }
 
 .course-card {
-    background-color: white;
+    background: linear-gradient(to bottom, #5dafcf 0%, #ffffff 40%);
+    border: 1px solid #e9e5ff; ;
     border-radius: 16px;
     padding: 1.5rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
@@ -342,7 +354,7 @@ body {
 
 .course-progress {
     font-weight: 700;
-    color: #3b82f6;
+    color: #081222;
     background-color: #eff6ff;
     padding: 0.25rem 0.75rem;
     border-radius: 20px;
@@ -405,7 +417,8 @@ body {
 
 /* Academic Summary */
 .academic-summary {
-    background-color: white;
+    background: linear-gradient(to bottom, #9acf5d 0%, #ffffff 40%);
+    border: 1px solid #e9e5ff; ;
     border-radius: 16px;
     padding: 1.5rem;
     box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);

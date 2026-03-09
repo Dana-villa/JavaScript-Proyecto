@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juanita Pérez · Panel de Estudio</title>
+    <title>Juanita Pérez · Panel de Estudiante</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../styles/dashEst.css">
 </head>
@@ -12,6 +12,7 @@
         <!-- Sidebar (manteniendo estructura similar) -->
         <aside class="sidebar">
             <div class="sidebar-bg" style="background-image: url('./images/lateral.jpg');"></div>
+
             <div class="sidebar-content">
                 <div class="sidebar-header">
                     <img src="../images/escudo.png" alt="Escudo de la Institución Educativa ABC" class="sidebar-escudo">
@@ -52,17 +53,14 @@
         <!-- Main Content - Rediseñado según la imagen -->
         <main class="main-content">
             <header class="main-header">
-                <div class="header-left">
-                    <h1 class="page-title">¡Hola, Juanita Pérez! ¡Bienvenida a tu panel de estudio!</h1>
-                    <p class="page-subtitle">Gestiona tus clases, alumnos y actividades.</p>
-                </div>
+                
                 <div class="header-right">
                     <div class="notificacion">
                         <img src="../images/notificacion.png" alt="Icono de notificaciones" class="icon-notification">
                         <span class="notificacion-badge">3</span>
                     </div>
                     <div class="avatar-container">
-                        <img src="../images/jefe.png" alt="Foto de perfil de Juanita Pérez" class="avatar-img">
+                        <img src="../images/hacker.png" alt="Foto de perfil de Juanita Pérez" class="avatar-img">
                         <span class="avatar-nombre">Juanita Pérez</span>
                         <img src="../images/aba.png" alt="Icono de menú desplegable" class="icon-chevron">
                     </div>
@@ -70,117 +68,97 @@
             </header>
 
             <div class="container">
-                <!-- Notificaciones y Recordatorios -->
-                <div class="notifications-section">
-                    <h2 class="section-title">Notificaciones y Recordatorios</h2>
-                    <div class="notifications-grid">
-                        <div class="notification-card urgent">
-                            <div class="notification-icon">📝</div>
-                            <div class="notification-content">
-                                <h3>Examen de Matemáticas mañana</h3>
-                                <p>Entregas de Tarea de Física</p>
-                                <a href="#" class="notification-link">Ver Horario Completo →</a>
-                            </div>
-                        </div>
-                        <div class="notification-card">
-                            <div class="notification-icon">📚</div>
-                            <div class="notification-content">
-                                <h3>Entrega de proyecto final</h3>
-                                <p>Plazo: Viernes 10 de marzo</p>
-                                <a href="#" class="notification-link">Ver detalles →</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                <section class="dashboard-display">
+                    <div class="dashboerd-welcome"></div>
 
-                <!-- Mis Cursos y Horarios -->
-                <div class="courses-section">
-                    <h2 class="section-title">Mis Cursos y Horarios</h2>
-                    <div class="courses-grid">
-                        <div class="course-card">
-                            <div class="course-header">
-                                <h3 class="course-title">Matemáticas B</h3>
-                                <span class="course-progress">45%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 45%"></div>
-                            </div>
-                            <div class="course-details">
-                                <p><span class="detail-bullet">•</span> Cursos completos 1</p>
-                                <p><span class="detail-bullet">•</span> Completado a completo 2</p>
-                            </div>
-                            <a href="#" class="course-link">Ver Horario Completo →</a>
-                        </div>
-                        <div class="course-card">
-                            <div class="course-header">
-                                <h3 class="course-title">Física A</h3>
-                                <span class="course-progress">70%</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 70%"></div>
-                            </div>
-                            <div class="course-details">
-                                <p><span class="detail-bullet">•</span> Lectura i notes (básicas)</p>
-                                <p><span class="detail-bullet">•</span> Quiz completo: 3</p>
-                            </div>
-                            <a href="#" class="course-link">Ver Horario Completo →</a>
-                        </div>
-                    </div>
-                </div>
+                        <h1 class="page-title">¡Hola, Juanita Pérez! ¡Bienvenida a tu panel de estudio!</h1>
+                        <p class="page-subtitle">Gestiona tus clases, alumnos y actividades.</p>
 
-                <!-- Fila de dos columnas: Resumen Académico + Horario Semanal -->
-                <div class="two-column-row">
-                    <!-- Mi Resumen Académico -->
-                    <div class="academic-summary">
-                        <h2 class="section-title">Mi Resumen Académico</h2>
-                        <div class="summary-stats">
-                            <div class="summary-item">
-                                <span class="summary-label">Cursos Inscritos</span>
-                                <span class="summary-value">6</span>
+                        <div class="welcome-stats">
+                            <!-- Notificaciones y Recordatorios -->
+                            <div class="notifications-section">
+                                <h2 class="section-title">Notificaciones y Recordatorios</h2>
+                                <div class="notifications-grid">
+                                    <div class="notification-card urgent">
+                                        <div class="notification-icon">📝</div>
+                                        <div class="notification-content">
+                                            <h3>Examen de Matemáticas mañana</h3>
+                                            <p>Entregas de Tarea de Física</p>
+                                        </div>
+                                    </div>
+                                    <div class="notification-card">
+                                        <div class="notification-icon">📚</div>
+                                        <div class="notification-content">
+                                            <h3>Entrega de proyecto final</h3>
+                                            <p>Plazo: Viernes 10 de marzo</p>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Promedio General</span>
-                                <span class="summary-value">4.5</span>
-                            </div>
-                            <div class="summary-item">
-                                <span class="summary-label">Progreso a graduación</span>
-                                <span class="summary-value">65%</span>
-                            </div>
-                        </div>
-                    </div>
 
-                    <!-- Mi Horario Semanal -->
-                    <div class="weekly-schedule">
-                        <h2 class="section-title">Mi Horario Semanal</h2>
-                        <div class="schedule-days">
-                            <div class="day">Lu</div>
-                            <div class="day">Ma</div>
-                            <div class="day">Mi</div>
-                            <div class="day">Ju</div>
-                            <div class="day">Vi</div>
-                            <div class="day">Sa</div>
-                            <div class="day">Do</div>
-                        </div>
-                    </div>
-                </div>
+                            <!-- Mis Cursos y Horarios -->
+                            <div class="courses-section">
+                                <h2 class="section-title">Mis Cursos y Horarios</h2>
+                                <div class="courses-grid">
+                                    <div class="course-card">
+                                        <div class="course-header">
+                                            <h3 class="course-title">Matemáticas B</h3>
+                                            <span class="course-progress">45%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 45%"></div>
+                                        </div>
+                                        <div class="course-details">
+                                            <p><span class="detail-bullet">•</span> Cursos completos 1</p>
+                                            <p><span class="detail-bullet">•</span> Completado a completo 2</p>
+                                        </div>
+                                        <a href="#" class="course-link">Ver →</a>
+                                    </div>
+                                    <div class="course-card">
+                                        <div class="course-header">
+                                            <h3 class="course-title">Física A</h3>
+                                            <span class="course-progress">70%</span>
+                                        </div>
+                                        <div class="progress-bar">
+                                            <div class="progress-fill" style="width: 70%"></div>
+                                        </div>
+                                        <div class="course-details">
+                                            <p><span class="detail-bullet">•</span> Lectura i notes (básicas)</p>
+                                            <p><span class="detail-bullet">•</span> Quiz completo: 3</p>
+                                        </div>
+                                        <a href="#" class="course-link">Ver →</a>
+                                    </div>
+                                </div>
+                            </div>
 
-                <!-- Recursos Destacados -->
-                <div class="resources-section">
-                    <h2 class="section-title">Recursos Destacados</h2>
-                    <div class="resources-grid">
-                        <div class="resource-card">
-                            <div class="resource-icon">📘</div>
-                            <span>Guías de Estudio</span>
+                            <!-- Fila de dos columnas: Resumen Académico + Horario Semanal -->
+                            <div class="two-column-row">
+                                <!-- Mi Resumen Académico -->
+                                <div class="academic-summary">
+                                    <h2 class="section-title">Mi Resumen Académico</h2>
+                                    <div class="summary-stats">
+                                        <div class="summary-item">
+                                            <span class="summary-label">Cursos Inscritos</span>
+                                            <span class="summary-value">6</span>
+                                        </div>
+                                        <div class="summary-item">
+                                            <span class="summary-label">Promedio General</span>
+                                            <span class="summary-value">4.5</span>
+                                        </div>
+                                        <div class="summary-item">
+                                            <span class="summary-label">Progreso a graduación</span>
+                                            <span class="summary-value">65%</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="resource-card">
-                            <div class="resource-icon">📚</div>
-                            <span>Guías Bibliotecas</span>
-                        </div>
-                    </div>
-                </div>
+                    </div>   
+                </section>
             </div>
         </main>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
