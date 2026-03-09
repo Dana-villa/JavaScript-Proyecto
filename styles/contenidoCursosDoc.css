@@ -1,22 +1,32 @@
 /* ═══════════════════════════════════════════════
-   Catálogo de Cursos — Institución Educativa ABC
+   Lecciones y Contenidos — Institución Educativa ABC
    ═══════════════════════════════════════════════ */
 
-*, *::before, *::after {
-    box-sizing: border-box;
+:root {
+    --main-bg: #ffffff;             /* Blanco para fondos principales */
+    --text-main: #000000;           /* Negro para el texto principal */
+    --text-muted: #6b7280;          /* Gris suave para textos secundarios o menos importantes */
+    --accent-blue: #1e5ba0;         /* Azul que se usa para detalles o acentos */
+    --card-purple: #e9e5ff;         /* Morado muy claro, para el fondo de la tarjeta de estudiantes */
+    --card-cyan: #e0f7f9;           /* Celeste muy claro, para el fondo de la tarjeta de docentes */
+    --card-shadow: 0 2px 12px rgba(0, 0, 0, 0.07); /* Sombra suave para tarjetas */
+    --card-radius: 18px;            /* Radio de borde para tarjetas */
+    --transition-base: 0.2s ease;   /* Transición base para efectos hover */
+}
+
+* {
     margin: 0;
     padding: 0;
+    box-sizing: border-box;
     font-family: 'Inter', sans-serif;
 }
 
-
-/* ── LAYOUT ── */
+/* ── LAYOUT PRINCIPAL ── */
 .dashboard {
     display: flex;
     min-height: 100vh;
     width: 100%;
 }
-
 
 /* ═══════════════════════════════════════════════
    SIDEBAR
@@ -42,8 +52,6 @@
     z-index: 0;
 }
 
-
-
 .sidebar-content {
     position: relative;
     z-index: 2;
@@ -55,7 +63,7 @@
     backdrop-filter: brightness(0.8);
 }
 
-/* Header / Logo */
+/* Logo / Escudo */
 .sidebar-header {
     display: flex;
     align-items: right;
@@ -69,7 +77,7 @@
     filter: brightness(1.1);
 }
 
-/* Nav */
+/* Navegación */
 .sidebar-menu {
     flex: 1;
 }
@@ -82,7 +90,7 @@
 }
 
 .menu-item {
-   display: flex;
+    display: flex;
     align-items: center;
     gap: 1rem;
     padding: 0.9rem 1rem;
@@ -95,8 +103,8 @@
 }
 
 .menu-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
 }
 
 .menu-item.active {
@@ -112,7 +120,7 @@
     filter: brightness(0.9);
 }
 
-/* Footer */
+/* Pie del sidebar */
 .sidebar-footer {
     margin-top: auto;
     padding-top: 2rem;
@@ -136,7 +144,7 @@
 }
 
 /* ═══════════════════════════════════════════════
-   MAIN CONTENT
+   CONTENIDO PRINCIPAL
    ═══════════════════════════════════════════════ */
 
 .main-content {
@@ -151,50 +159,90 @@
 .main-header {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    padding: 16px 32px;
+    justify-content: space-between;
     background: #ffffff;
+    width: 100%;
+    border-bottom: 1px solid #eef0f5;
 }
 
-.header-actions {
+.page-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #1e293b;
+    margin-bottom: 0.25rem;
+    margin-top: 20px;
+}
+
+.btn-add{
+    margin-top: 20px;
+    font-size: 0.95rem;
+    color: #64748b;
+}
+
+.header-right {
     display: flex;
-    gap: 10px;
     align-items: center;
+    gap: 2rem;
+    padding: 1rem 2rem;
+    margin-left: auto;
 }
 
-.btn-login {
-    background: #2563eb;
+/* Notificación */
+.notificacion {
+    position: relative;
+    cursor: pointer;
+}
+
+.icon-notification {
+    width: 28px;
+    height: 28px;
+    object-fit: contain;
+    filter: invert(30%) sepia(80%) saturate(400%) hue-rotate(200deg);
+}
+
+.notificacion-badge {
+    position: absolute;
+    top: -4px;
+    right: -4px;
+    background: #ef4444;
     color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 28px;
-    font-size: 14px;
-    font-weight: 600;
+    font-size: 9px;
+    font-weight: 700;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Avatar */
+.avatar-container {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: background 0.2s;
 }
 
-.btn-login:hover {
-    background: #1d4ed8;
+.avatar-img {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #2d4a8a;
 }
 
-.btn-register {
-    background: #ffffff;
-    color: #1f2937;
-    border: 1.5px solid #d1d5db;
-    border-radius: 8px;
-    padding: 10px 28px;
+.avatar-nombre {
     font-size: 14px;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: 'Inter', sans-serif;
-    transition: background 0.2s, border-color 0.2s;
+    font-weight: 500;
+    color: #374151;
 }
 
-.btn-register:hover {
-    background: #f9fafb;
-    border-color: #9ca3af;
+.icon-chevron {
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+    opacity: 0.5;
 }
 
 /* ── CONTAINER ── */
@@ -203,56 +251,61 @@
     flex: 1;
 }
 
-/* ── CATALOG TITLE ── */
-.catalog-title {
-    font-size: 26px;
+/* ── PAGE HEADER: título + botón ── */
+.page-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+}
+
+.page-title {
+    font-size: 28px;
     font-weight: 700;
     color: #111827;
-    text-align: center;
-    margin-bottom: 18px;
+    line-height: 1.2;
 }
 
-/* ── SEARCH BAR ── */
-.search-wrapper {
-    position: relative;
-    max-width: 380px;
-    margin: 0 auto 28px;
-}
-
-.search-input {
-    width: 100%;
-    padding: 11px 18px 11px 18px;
-    border: 1.5px solid #e5e7eb;
+/* Botón Añadir Nuevo Módulo */
+.btn-add {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: #2563eb;
+    color: #fff;
+    border: none;
     border-radius: 10px;
+    padding: 12px 24px;
     font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
     font-family: 'Inter', sans-serif;
-    color: #374151;
-    background: #ffffff;
-    outline: none;
-    transition: border-color 0.2s, box-shadow 0.2s;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
 }
 
-.search-input::placeholder {
-    color: #9ca3af;
+.btn-add:hover {
+    background: #1d4ed8;
+    transform: translateY(-1px);
 }
 
-.search-input:focus {
-    border-color: #2563eb;
-    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+.btn-add__icon {
+    font-size: 18px;
+    font-weight: 400;
+    line-height: 1;
 }
 
-.search-icon {
-    display: none; /* hidden, placeholder text is sufficient */
-}
+/* ═══════════════════════════════════════════════
+   GRID DE CURSOS
+   ═══════════════════════════════════════════════ */
 
-/* ── COURSES GRID ── */
 .courses-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 18px;
 }
 
-/* ── COURSE CARD ── */
+/* ── TARJETA DE CURSO ── */
 .course-card {
     background: #ffffff;
     border-radius: 12px;
@@ -260,13 +313,13 @@
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
-    transition: transform 0.2s, box-shadow 0.2s;
     cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .course-card:hover {
     transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.13);
 }
 
 /* Thumbnail */
@@ -286,10 +339,10 @@
 }
 
 .course-card:hover .course-card__thumbnail img {
-    transform: scale(1.04);
+    transform: scale(1.05);
 }
 
-/* Body */
+/* Cuerpo de texto */
 .course-card__body {
     padding: 12px 14px 16px;
     display: flex;

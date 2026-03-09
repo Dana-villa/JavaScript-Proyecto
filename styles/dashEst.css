@@ -11,10 +11,6 @@
     width: 100%;
 }
 
-.container{
-    background-color: white;
-}
-
 /* Sidebar Styles (manteniendo similar) */
 .sidebar {
    width: 280px;
@@ -98,8 +94,8 @@
 .menu-icon {
     width: 24px;
     height: 24px;
-    filter: brightness(0) invert(1);
-    opacity: 0.9;
+    object-fit: contain;
+    filter: brightness(0.9);
 }
 
 .sidebar-footer {
