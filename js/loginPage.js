@@ -4,7 +4,7 @@ const roles = ["admin", "teacher", "student"]
 
 const users = [
     {
-        nombre: "santiago",
+        nombre: "User Pérez",
         rol: "admin",
         correo: "adm.perez@abc.com",
         contraseña: "1234"
@@ -31,7 +31,7 @@ function login() {
 
     <div class="campo">
         <img src="../images/correo.png" alt="Correo">
-        <input type="email" placeholder="Correo electrónico" class="input-campo input-campo__email">
+        <input type="email" placeholder="Digite el usuario" class="input-campo input-campo__email">
     </div>
 
     <div class="campo">
