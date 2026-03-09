@@ -5,7 +5,7 @@
 *, *::before, *::after {
     margin: 0;
     padding: 0;
-        box-sizing: border-box;
+    box-sizing: border-box;
     font-family: 'Inter', sans-serif;
 }
 
@@ -98,8 +98,8 @@
 }
 
 .menu-item:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: rgba(255, 255, 255, 0.08);
+    color: white;
 }
 
 .menu-icon {
@@ -129,7 +129,7 @@
 
 .cerrar-sesion:hover {
     background: rgba(255, 255, 255, 0.);
-    color: #fff;
+    color: white;
 }
 
 /* ═══════════════════════════════════════════════
@@ -151,8 +151,10 @@
     justify-content: flex-end;
     padding: 14px 28px;
     background: #fdfdfd;
+    border-bottom: 1px solid #eef0f5;
     gap: 16px;
 }
+
 
 .notificacion {
     position: relative;
@@ -218,6 +220,7 @@
 
 /* ── WELCOME GREETING ── */
 .welcome-greeting {
+    margin-top: 2rem;
     margin-bottom: 20px;
 }
 
