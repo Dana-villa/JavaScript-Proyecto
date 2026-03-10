@@ -222,6 +222,8 @@ function abrirModal(cursoId) {
   card.style.setProperty("--curso-color", curso.color);
   card.style.setProperty("--curso-bg",    curso.colorBg);
 
+  
+
   body.innerHTML = curso.modulos.map(mod => `
     <div class="modulo-item">
       <div class="modulo-icon-wrap" style="color:${curso.color}; background:${curso.colorBg}">
@@ -966,7 +968,228 @@ function initNotificacion() {
   });
 }
 
+
+/* ══════════════════════════════════════════════════════
+   POPUP PERFIL USUARIO
+   ══════════════════════════════════════════════════════ */
+
+function inyectarPopupPerfil() {
+
+  const usuario = {
+    nombre: "Docente García",
+    rol: "PROFESOR",
+    area: "TECNOLOGIA",
+    email: "docen.garcia@abc.com",
+    cursos: docentes.length,
+    docentes: docentes.length,
+    pendientes: 0,
+    avatar: "../images/jefe.png"
+  };
+
+  const html = `
+  <div id="popup-perfil" class="perfil-popup">
+
+    <button id="perfil-close" class="perfil-popup__close">&times;</button>
+
+    <div class="perfil-popup__banner"></div>
+
+    <div class="perfil-popup__avatar-wrap">
+      <img src="${usuario.avatar}" class="perfil-popup__avatar">
+    </div>
+
+    <div class="perfil-popup__body">
+
+      <h3 class="perfil-popup__nombre">${usuario.nombre}</h3>
+
+      <p class="perfil-popup__rol">
+        ${usuario.rol} · ${usuario.area}
+      </p>
+
+      <p class="perfil-popup__email">
+        ${usuario.email}
+      </p>
+
+      <div class="perfil-popup__stats">
+
+        <div class="perfil-stat">
+          <span class="perfil-stat__num">${usuario.cursos}</span>
+          <span class="perfil-stat__lbl">CURSOS</span>
+        </div>
+
+        <div class="perfil-stat perfil-stat--divider">
+          <span class="perfil-stat__num">${usuario.docentes}</span>
+          <span class="perfil-stat__lbl">DOCENTES</span>
+        </div>
+
+        <div class="perfil-stat">
+          <span class="perfil-stat__num">${usuario.pendientes}</span>
+          <span class="perfil-stat__lbl">PENDIENTES</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  `;
+
+  document.body.insertAdjacentHTML("beforeend", html);
+
+  inyectarEstilosPerfil();
+}
+
+function inyectarEstilosPerfil() {
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+
+  .perfil-popup{
+    position:fixed;
+    top:70px;
+    right:24px;
+    width:280px;
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 14px 40px rgba(0,0,0,.25);
+    z-index:8000;
+    overflow:hidden;
+
+    opacity:0;
+    transform:translateY(-10px) scale(.96);
+    pointer-events:none;
+    transition:.2s;
+  }
+
+  .perfil-popup.is-open{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    pointer-events:auto;
+  }
+
+  .perfil-popup__banner{
+    height:76px;
+    background:linear-gradient(135deg,#a78bfa,#60a5fa,#f472b6);
+  }
+
+  .perfil-popup__close{
+    position:absolute;
+    top:10px;
+    right:12px;
+    background:rgba(255,255,255,.3);
+    border:none;
+    color:#fff;
+    font-size:18px;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    cursor:pointer;
+  }
+
+  .perfil-popup__avatar-wrap{
+    display:flex;
+    justify-content:center;
+    margin-top:-36px;
+  }
+
+  .perfil-popup__avatar{
+    width:74px;
+    height:74px;
+    border-radius:50%;
+    border:3px solid #fff;
+    object-fit:cover;
+  }
+
+  .perfil-popup__body{
+    padding:12px 20px 20px;
+    text-align:center;
+  }
+
+  .perfil-popup__nombre{
+    font-size:16px;
+    font-weight:700;
+  }
+
+  .perfil-popup__rol{
+    font-size:11px;
+    font-weight:700;
+    color:#8b5cf6;
+  }
+
+  .perfil-popup__email{
+    font-size:12px;
+    color:#6b7280;
+  }
+
+  .perfil-popup__stats{
+    display:flex;
+    justify-content:center;
+    margin-top:12px;
+    border-top:1px solid #eee;
+    border-bottom:1px solid #eee;
+    padding:12px 0;
+  }
+
+  .perfil-stat{
+    flex:1;
+    text-align:center;
+  }
+
+  .perfil-stat--divider{
+    border-left:1px solid #eee;
+    border-right:1px solid #eee;
+  }
+
+  .perfil-stat__num{
+    font-size:20px;
+    font-weight:700;
+  }
+
+  .perfil-stat__lbl{
+    font-size:9px;
+    color:#9ca3af;
+  }
+
+  .avatar-container{
+    cursor:pointer;
+  }
+
+  `;
+
+  document.head.appendChild(style);
+}
+
+function initPopupPerfil(){
+
+  const avatar = document.querySelector(".avatar-container");
+  const popup = document.getElementById("popup-perfil");
+
+  if(!avatar || !popup) return;
+
+  avatar.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    popup.classList.toggle("is-open");
+  });
+
+  document.addEventListener("click",(e)=>{
+    if(!popup.contains(e.target) && !avatar.contains(e.target)){
+      popup.classList.remove("is-open");
+    }
+  });
+
+  document.getElementById("perfil-close")?.addEventListener("click",()=>{
+    popup.classList.remove("is-open");
+  });
+
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  inyectarModal();
+  inyectarModalLogout();
+  renderGrid();
+  initEventos();
+});
 document.addEventListener("DOMContentLoaded", () => {
   inyectarEstilosModal();
   crearModal();
