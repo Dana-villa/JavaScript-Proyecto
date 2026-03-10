@@ -874,17 +874,18 @@ function initSidebar() {
       document.querySelectorAll(".menu-item").forEach(m => m.classList.remove("active"));
       item.classList.add("active");
 
-      // Navegar si tiene ruta definida y no es la actual
-      if (path && routeMap[path]) {
-        // Si es la misma página, no navegar
+      // Navegar si tiene ruta definida
+      if (path && RUTAS_SIDEBAR[path]) {
+
         const currentPage = window.location.pathname.split("/").pop();
-        const targetPage  = routeMap[path].split("/").pop();
+        const targetPage  = RUTAS_SIDEBAR[path].split("/").pop();
+
         if (currentPage !== targetPage) {
-          // Pequeño delay para ver el efecto visual
           setTimeout(() => {
-            window.location.href = routeMap[path];
+            window.location.href = RUTAS_SIDEBAR[path];
           }, 120);
         }
+
       }
     });
   });
@@ -976,12 +977,12 @@ function initNotificacion() {
 function inyectarPopupPerfil() {
 
   const usuario = {
-    nombre: "Docente García",
-    rol: "PROFESOR",
+    nombre: "User Pèrez",
+    rol: "ADMINISTRADOR",
     area: "TECNOLOGIA",
-    email: "docen.garcia@abc.com",
-    cursos: docentes.length,
-    docentes: docentes.length,
+    email: "adm.perez@abc.com",
+    cursos: cursosData.length,
+    docentes: 5,
     pendientes: 0,
     avatar: "../images/jefe.png"
   };
@@ -1183,6 +1184,20 @@ function initPopupPerfil(){
 
 }
 
+document.addEventListener("DOMContentLoaded", () => {
+  inyectarEstilosModal();
+  crearModal();
+  crearModalNuevoModulo();
+  crearModalCerrarSesion();
+  vincularTarjetas();
+  initCerrarModal();
+  initEventosModalNuevo();
+  initCerrarSesion();
+  initSidebar();
+  initBtnAdd();
+  initNotificacion();
+});
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   inyectarModal();
@@ -1202,4 +1217,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initSidebar();
   initBtnAdd();
   initNotificacion();
+
+  // PERFIL USUARIO
+  inyectarPopupPerfil();
+  initPopupPerfil();
 });
