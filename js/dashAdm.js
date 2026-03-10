@@ -1,300 +1,679 @@
-/* ============================================================
-   DASHBOARD PRINCIPAL — ADMINISTRADOR
-   Institución Educativa ABC
-   Archivo: js/dashAdm.js
-   Usar en: pages/dashAdm.html → <script src="../js/dashAdm.js"></script>
-   ============================================================ */
+/* ═══════════════════════════════
+   RUTAS SIDEBAR
+═══════════════════════════════ */
 
-document.addEventListener('DOMContentLoaded', () => {
+const RUTAS = {
+dashboard:"dashboard1.html",
+cursos:"gestionCursosAdm.html",
+docentes:"gestionDocentes.html",
+admin:"moduloAdm.html"
+};
 
-    /* ============================================================
-       1. NAVEGACIÓN DEL MENÚ LATERAL
-       ============================================================ */
-    const menuItems = document.querySelectorAll('.menu-item');
 
-    const rutas = {
-        dashboard: 'dashAdm.html',
-        cursos:    'gestionCursosAdm.html',
-        docentes:  'gestionDocentes.html',
-        admin:     'moduloAdm.html',
-    };
+/* ═══════════════════════════════
+   SIDEBAR
+═══════════════════════════════ */
 
-    menuItems.forEach(item => {
-        item.addEventListener('click', () => {
-            const path = item.dataset.path;
-            menuItems.forEach(i => i.classList.remove('active'));
-            item.classList.add('active');
-            if (rutas[path]) {
-                window.location.href = rutas[path];
-            }
-        });
-    });
+function initSidebar(){
 
-    /* ============================================================
-       2. MODAL CERRAR SESIÓN
-       ============================================================ */
-    const cerrarSesionBtn = document.querySelector('.cerrar-sesion');
+document.querySelectorAll(".menu-item").forEach(item=>{
 
-    document.body.insertAdjacentHTML('beforeend', `
-        <div class="modal-overlay" id="modalCerrarSesion" role="dialog" aria-modal="true">
-            <div class="modal-box">
-                <h2 class="modal-titulo">¿Cerrar sesión?</h2>
-                <p class="modal-desc">¿Estás seguro de que deseas cerrar tu sesión actual?</p>
-                <div class="modal-actions">
-                    <button class="btn-cancelar" id="btnCancelarSesion">Cancelar</button>
-                    <button class="btn-confirmar" id="btnConfirmarSesion">Sí, cerrar sesión</button>
-                </div>
-            </div>
-        </div>
-    `);
+item.addEventListener("click",()=>{
 
-    const modalOverlay = document.getElementById('modalCerrarSesion');
-    const btnCancelar  = document.getElementById('btnCancelarSesion');
-    const btnConfirmar = document.getElementById('btnConfirmarSesion');
+const ruta=RUTAS[item.dataset.path];
 
-    cerrarSesionBtn?.addEventListener('click', () => modalOverlay.classList.add('modal-visible'));
-    btnCancelar?.addEventListener('click', () => modalOverlay.classList.remove('modal-visible'));
-    modalOverlay?.addEventListener('click', (e) => {
-        if (e.target === modalOverlay) modalOverlay.classList.remove('modal-visible');
-    });
-    btnConfirmar?.addEventListener('click', () => {
-        window.location.href = '../index.html';
-    });
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') modalOverlay.classList.remove('modal-visible');
-    });
+if(!ruta){
+mostrarToast("Módulo no disponible","info");
+return;
+}
 
-    /* ============================================================
-       3. PANEL DE NOTIFICACIONES
-       ============================================================ */
-    const notificacionBtn   = document.querySelector('.notificacion');
-    const notificacionBadge = document.querySelector('.notificacion-badge');
+document.querySelector(".main-content")
+?.classList.add("page-exit");
 
-    const notificaciones = [
-        { id: 1, texto: 'Nuevo docente registrado: Prof. Martínez',   tiempo: 'Hace 5 min',   leida: false },
-        { id: 2, texto: 'El curso "Matemáticas 10°" fue actualizado.', tiempo: 'Hace 1 hora',  leida: false },
-        { id: 3, texto: 'Reporte mensual listo para descargar.',       tiempo: 'Hace 3 horas', leida: false },
-    ];
+setTimeout(()=>{
 
-    notificacionBtn?.insertAdjacentHTML('afterend', `
-        <div class="notif-panel" id="notifPanel">
-            <div class="notif-panel__header">
-                <span class="notif-panel__titulo">Notificaciones</span>
-                <button class="notif-panel__marcar" id="btnMarcarLeidas">Marcar todas como leídas</button>
-            </div>
-            <ul class="notif-panel__lista" id="notifLista"></ul>
-            <div class="notif-panel__footer">Ver todas las notificaciones</div>
-        </div>
-    `);
+window.location.href=ruta;
 
-    const notifPanel = document.getElementById('notifPanel');
-    const notifLista = document.getElementById('notifLista');
-    const btnMarcar  = document.getElementById('btnMarcarLeidas');
+},180);
 
-    function renderNotificaciones() {
-        notifLista.innerHTML = '';
-        notificaciones.forEach(n => {
-            const li = document.createElement('li');
-            li.className = `notif-item${n.leida ? '' : ' notif-item--nueva'}`;
-            li.innerHTML = `
-                <div class="notif-item__contenido">
-                    <p class="notif-item__texto">${n.texto}</p>
-                    <span class="notif-item__tiempo">${n.tiempo}</span>
-                </div>
-                ${!n.leida ? '<span class="notif-item__punto"></span>' : ''}
-            `;
-            li.addEventListener('click', () => {
-                n.leida = true;
-                actualizarBadge();
-                renderNotificaciones();
-            });
-            notifLista.appendChild(li);
-        });
-    }
+});
 
-    function actualizarBadge() {
-        const sinLeer = notificaciones.filter(n => !n.leida).length;
-        notificacionBadge.textContent = sinLeer;
-        notificacionBadge.style.display = sinLeer > 0 ? 'inline-block' : 'none';
-    }
+});
 
-    notificacionBtn?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        const visible = notifPanel.classList.toggle('notif-panel--visible');
-        if (visible) {
-            renderNotificaciones();
-            avatarDropdown?.classList.remove('avatar-dropdown--visible');
-        }
-    });
+}
 
-    btnMarcar?.addEventListener('click', () => {
-        notificaciones.forEach(n => n.leida = true);
-        actualizarBadge();
-        renderNotificaciones();
-    });
 
-    document.addEventListener('click', (e) => {
-        if (notifPanel && !notifPanel.contains(e.target) && !notificacionBtn.contains(e.target)) {
-            notifPanel.classList.remove('notif-panel--visible');
-        }
-    });
+/* ═══════════════════════════════
+   PERFIL USUARIO
+═══════════════════════════════ */
 
-    actualizarBadge();
+function initPerfil(){
 
-    /* ============================================================
-       4. DROPDOWN AVATAR / PERFIL
-       ============================================================ */
-    const avatarContainer = document.querySelector('.avatar-container');
+const avatar=document.querySelector(".avatar-container");
 
-    avatarContainer?.insertAdjacentHTML('afterend', `
-        <div class="avatar-dropdown" id="avatarDropdown" role="menu">
-            <div class="avatar-dropdown__info">
-                <img src="../images/jefe.png" alt="" class="avatar-dropdown__img">
-                <div>
-                    <p class="avatar-dropdown__nombre">User Pérez</p>
-                    <p class="avatar-dropdown__rol">Administrador</p>
-                </div>
-            </div>
-            <hr class="avatar-dropdown__divider">
-            <ul class="avatar-dropdown__menu">
-                <li class="avatar-dropdown__item">
-                    <img src="../images/administrador.png" alt="" class="menu-icon"> Mi Perfil
-                </li>
-                <li class="avatar-dropdown__item">
-                    <img src="../images/dashboard.png" alt="" class="menu-icon"> Configuración
-                </li>
-            </ul>
-            <hr class="avatar-dropdown__divider">
-            <div class="avatar-dropdown__item avatar-dropdown__item--salir" id="dropdownCerrarSesion">
-                <img src="../images/sesion.png" alt="" class="menu-icon"> Cerrar Sesión
-            </div>
-        </div>
-    `);
+avatar?.addEventListener("click",(e)=>{
 
-    const avatarDropdown = document.getElementById('avatarDropdown');
-    const dropdownCerrar = document.getElementById('dropdownCerrarSesion');
+e.stopPropagation();
 
-    avatarContainer?.addEventListener('click', (e) => {
-        e.stopPropagation();
-        avatarDropdown.classList.toggle('avatar-dropdown--visible');
-        notifPanel?.classList.remove('notif-panel--visible');
-    });
+document
+.getElementById("perfil-popup")
+.classList.toggle("open");
 
-    dropdownCerrar?.addEventListener('click', () => {
-        avatarDropdown.classList.remove('avatar-dropdown--visible');
-        modalOverlay.classList.add('modal-visible');
-    });
+});
 
-    document.addEventListener('click', (e) => {
-        if (avatarDropdown && !avatarDropdown.contains(e.target) && !avatarContainer.contains(e.target)) {
-            avatarDropdown.classList.remove('avatar-dropdown--visible');
-        }
-    });
+document.addEventListener("click",(e)=>{
 
-    /* ============================================================
-       ESTILOS DINÁMICOS — todos en un solo bloque <style>
-       ============================================================ */
-    const estilos = document.createElement('style');
-    estilos.textContent = `
+const popup=document.getElementById("perfil-popup");
 
-        /* --- Modal --- */
-        .modal-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(0,0,0,0.45); z-index: 1000;
-            align-items: center; justify-content: center;
-        }
-        .modal-overlay.modal-visible { display: flex; }
-        .modal-box {
-            background: #fff; border-radius: 18px; padding: 2rem 2.5rem;
-            max-width: 400px; width: 90%; text-align: center;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.18);
-            animation: modalEntrada 0.2s ease;
-        }
-        @keyframes modalEntrada {
-            from { transform: scale(0.92); opacity: 0; }
-            to   { transform: scale(1);    opacity: 1; }
-        }
-        .modal-titulo  { font-size: 1.3rem; font-weight: 700; margin-bottom: 0.5rem; color: #111; }
-        .modal-desc    { color: #6b7280; font-size: 0.95rem; margin-bottom: 1.5rem; }
-        .modal-actions { display: flex; gap: 1rem; justify-content: center; }
-        .btn-cancelar  {
-            padding: 0.6rem 1.4rem; border-radius: 10px; border: 1px solid #d1d5db;
-            background: #fff; cursor: pointer; font-weight: 500; transition: background 0.15s;
-        }
-        .btn-cancelar:hover  { background: #f3f4f6; }
-        .btn-confirmar {
-            padding: 0.6rem 1.4rem; border-radius: 10px; border: none;
-            background: #ef4444; color: #fff; cursor: pointer; font-weight: 600; transition: background 0.15s;
-        }
-        .btn-confirmar:hover { background: #dc2626; }
+if(!popup.contains(e.target) &&
+!avatar.contains(e.target)){
 
-        /* --- Notificaciones --- */
-        .notificacion { position: relative; }
-        .notif-panel {
-            display: none; position: absolute; top: calc(100% + 12px); right: 0;
-            width: 320px; background: #fff; border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.14); z-index: 500;
-            overflow: hidden; animation: fadeDown 0.18s ease;
-        }
-        .notif-panel--visible { display: block; }
-        @keyframes fadeDown {
-            from { transform: translateY(-8px); opacity: 0; }
-            to   { transform: translateY(0);    opacity: 1; }
-        }
-        .notif-panel__header {
-            display: flex; justify-content: space-between;
-            align-items: center; padding: 1rem 1.2rem 0.6rem;
-        }
-        .notif-panel__titulo { font-weight: 700; font-size: 0.95rem; color: #111; }
-        .notif-panel__marcar {
-            font-size: 0.75rem; color: #1e5ba0; background: none;
-            border: none; cursor: pointer; font-weight: 500;
-        }
-        .notif-panel__marcar:hover { text-decoration: underline; }
-        .notif-panel__lista { list-style: none; max-height: 260px; overflow-y: auto; }
-        .notif-item {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 0.75rem 1.2rem; cursor: pointer;
-            border-bottom: 1px solid #f3f4f6; transition: background 0.12s;
-        }
-        .notif-item:hover    { background: #f9fafb; }
-        .notif-item--nueva   { background: #eff6ff; }
-        .notif-item__texto   { font-size: 0.83rem; color: #222; margin-bottom: 0.2rem; line-height: 1.4; }
-        .notif-item__tiempo  { font-size: 0.75rem; color: #9ca3af; }
-        .notif-item__punto   {
-            width: 8px; height: 8px; border-radius: 50%;
-            background: #1e5ba0; flex-shrink: 0; margin-left: 0.8rem;
-        }
-        .notif-panel__footer {
-            padding: 0.7rem 1.2rem; text-align: center;
-            font-size: 0.8rem; color: #1e5ba0; cursor: pointer; font-weight: 500;
-        }
-        .notif-panel__footer:hover { background: #f0f4ff; }
+popup.classList.remove("open");
 
-        /* --- Dropdown avatar --- */
-        .main-header { position: relative; }
-        .avatar-dropdown {
-            display: none; position: absolute; top: calc(100% + 8px); right: 2rem;
-            width: 230px; background: #fff; border-radius: 16px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.14); z-index: 500;
-            overflow: hidden; animation: fadeDown 0.18s ease;
-        }
-        .avatar-dropdown--visible { display: block; }
-        .avatar-dropdown__info    { display: flex; align-items: center; gap: 0.8rem; padding: 1rem 1.2rem; }
-        .avatar-dropdown__img     { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; }
-        .avatar-dropdown__nombre  { font-weight: 700; font-size: 0.9rem; color: #111; }
-        .avatar-dropdown__rol     { font-size: 0.78rem; color: #6b7280; }
-        .avatar-dropdown__divider { border: none; border-top: 1px solid #f3f4f6; margin: 0; }
-        .avatar-dropdown__menu    { list-style: none; padding: 0.4rem 0; }
-        .avatar-dropdown__item {
-            display: flex; align-items: center; gap: 0.7rem;
-            padding: 0.65rem 1.2rem; font-size: 0.88rem;
-            color: #333; cursor: pointer; transition: background 0.12s;
-        }
-        .avatar-dropdown__item:hover        { background: #f3f4f6; }
-        .avatar-dropdown__item--salir       { color: #ef4444; margin-bottom: 0.3rem; }
-        .avatar-dropdown__item--salir:hover { background: #fff5f5; }
-    `;
-    document.head.appendChild(estilos);
+}
+
+});
+
+}
+
+
+/* ═══════════════════════════════
+   CURSOS - VER
+═══════════════════════════════ */
+
+function initCursos(){
+
+document.querySelectorAll(".course-card")
+.forEach(card=>{
+
+card.addEventListener("click",()=>{
+
+const titulo=card.querySelector(".course-card__title").innerText;
+const desc=card.querySelector(".course-card__desc").innerText;
+
+const modal=document.getElementById("curso-modal");
+
+modal.querySelector(".curso-titulo").innerText=titulo;
+modal.querySelector(".curso-desc").innerText=desc;
+
+modal.classList.add("open");
+
+});
+
+});
+
+}
+
+
+function cerrarCursoModal(){
+
+document.getElementById("curso-modal")
+.classList.remove("open");
+
+}
+
+
+/* ═══════════════════════════════
+   AÑADIR MODULO
+═══════════════════════════════ */
+
+function initNuevoModulo(){
+
+document.querySelector(".btn-add")
+?.addEventListener("click",()=>{
+
+document.getElementById("nuevo-modulo")
+.classList.add("open");
+
+});
+
+}
+
+
+function cerrarNuevoModulo(){
+
+document.getElementById("nuevo-modulo")
+.classList.remove("open");
+
+}
+
+
+function guardarModulo(){
+
+const nombre=document.getElementById("mod-nombre").value;
+const desc=document.getElementById("mod-desc").value;
+const img=document.getElementById("mod-img").value;
+
+if(!nombre){
+mostrarToast("Ingrese el nombre del módulo","error");
+return;
+}
+
+const grid=document.querySelector(".courses-grid");
+
+const card=document.createElement("article");
+
+card.className="course-card";
+
+card.innerHTML=`
+
+<div class="course-card__thumbnail">
+<img src="${img || '../images/desarrollo-web.webp'}">
+</div>
+
+<div class="course-card__body">
+<h3 class="course-card__title">${nombre}</h3>
+<p class="course-card__desc">${desc || 'Nuevo módulo agregado'}</p>
+</div>
+
+`;
+
+grid.appendChild(card);
+
+cerrarNuevoModulo();
+
+initCursos();
+
+mostrarToast("Módulo creado correctamente");
+
+}
+
+
+/* ═══════════════════════════════
+   CERRAR SESIÓN
+═══════════════════════════════ */
+
+function initCerrarSesion(){
+
+document.querySelector(".cerrar-sesion")
+?.addEventListener("click",()=>{
+
+document.getElementById("logout-modal")
+.classList.add("open");
+
+});
+
+}
+
+function cancelarLogout(){
+
+document.getElementById("logout-modal")
+.classList.remove("open");
+
+}
+
+function confirmarLogout(){
+
+localStorage.removeItem("session_usuario");
+
+setTimeout(()=>{
+
+window.location.href="loginPage.html";
+
+},500);
+
+}
+
+
+/* ═══════════════════════════════
+   TOAST
+═══════════════════════════════ */
+
+let toastTimer;
+
+function mostrarToast(msg,tipo="success"){
+
+const toast=document.getElementById("toast");
+
+toast.textContent=msg;
+
+toast.className=`toast toast-${tipo} show`;
+
+clearTimeout(toastTimer);
+
+toastTimer=setTimeout(()=>{
+
+toast.classList.remove("show");
+
+},3000);
+
+}
+
+
+/* ═══════════════════════════════
+   INYECTAR UI
+═══════════════════════════════ */
+
+function inyectarUI(){
+
+document.body.insertAdjacentHTML("beforeend",`
+
+<!-- PERFIL -->
+
+<div id="perfil-popup" class="perfil-popup">
+
+<button class="perfil-close"
+onclick="document.getElementById('perfil-popup').classList.remove('open')">✕</button>
+
+<div class="perfil-banner"></div>
+
+<div class="perfil-avatar-wrap">
+<img src="../images/jefe.png">
+</div>
+
+<div class="perfil-body">
+
+<h3>Docente García</h3>
+
+<p class="perfil-rol">DOCENTE · TECNOLOGÍA</p>
+
+<p class="perfil-email">docen.garcia@abc.com</p>
+
+<div class="perfil-stats">
+
+<div>
+<span>6</span>
+<p>Cursos</p>
+</div>
+
+<div>
+<span>180</span>
+<p>Alumnos</p>
+</div>
+
+<div>
+<span>0</span>
+<p>Pendientes</p>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- MODAL CURSO -->
+
+<div id="curso-modal" class="modal">
+
+<div class="modal-box">
+
+<button class="modal-close"
+onclick="cerrarCursoModal()">✕</button>
+
+<h2 class="curso-titulo"></h2>
+
+<p class="curso-desc"></p>
+
+<button class="btn-primary">Ver lecciones</button>
+
+</div>
+
+</div>
+
+
+<!-- NUEVO MODULO -->
+
+<div id="nuevo-modulo" class="modal">
+
+<div class="modal-box">
+
+<h2>Nuevo Módulo</h2>
+
+<input id="mod-nombre" placeholder="Nombre del módulo">
+
+<textarea id="mod-desc" placeholder="Descripción"></textarea>
+
+<input id="mod-img" placeholder="URL imagen">
+
+<div class="modal-actions">
+
+<button onclick="cerrarNuevoModulo()">Cancelar</button>
+
+<button onclick="guardarModulo()" class="btn-primary">
+Crear
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+
+<!-- LOGOUT -->
+
+<div id="logout-modal" class="modal">
+
+<div class="modal-box">
+
+<h3>Cerrar sesión</h3>
+
+<p>¿Desea cerrar la sesión actual?</p>
+
+<div class="modal-actions">
+
+<button onclick="cancelarLogout()">Cancelar</button>
+
+<button onclick="confirmarLogout()" class="btn-danger">
+Cerrar sesión
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<div id="toast" class="toast"></div>
+
+`);
+
+inyectarEstilos();
+
+}
+
+
+/* ═══════════════════════════════
+   ESTILOS
+═══════════════════════════════ */
+
+function inyectarEstilos(){
+
+const style=document.createElement("style");
+
+style.textContent=`
+
+.perfil-popup{
+
+position:fixed;
+top:70px;
+right:25px;
+
+width:290px;
+
+background:white;
+
+border-radius:20px;
+
+overflow:hidden;
+
+box-shadow:0 20px 60px rgba(0,0,0,0.25);
+
+transform:translateY(-10px) scale(.95);
+
+opacity:0;
+
+pointer-events:none;
+
+transition:.25s;
+
+z-index:9000;
+
+}
+
+.perfil-popup.open{
+opacity:1;
+transform:translateY(0) scale(1);
+pointer-events:auto;
+}
+
+.perfil-banner{
+
+height:90px;
+
+background:linear-gradient(135deg,#8b5cf6,#60a5fa);
+
+}
+
+.perfil-close{
+
+position:absolute;
+
+right:12px;
+top:12px;
+
+border:none;
+
+background:rgba(255,255,255,.3);
+
+color:white;
+
+width:26px;
+
+height:26px;
+
+border-radius:50%;
+
+cursor:pointer;
+
+}
+
+.perfil-avatar-wrap{
+
+display:flex;
+justify-content:center;
+
+margin-top:-35px;
+
+}
+
+.perfil-avatar-wrap img{
+
+width:70px;
+height:70px;
+
+border-radius:50%;
+
+border:3px solid white;
+
+}
+
+.perfil-body{
+
+text-align:center;
+
+padding:12px 20px 20px;
+
+}
+
+.perfil-rol{
+
+font-size:12px;
+
+color:#7c3aed;
+
+font-weight:700;
+
+}
+
+.perfil-email{
+
+font-size:12px;
+
+color:#6b7280;
+
+}
+
+.perfil-stats{
+
+display:flex;
+
+justify-content:space-around;
+
+margin-top:12px;
+
+padding-top:12px;
+
+border-top:1px solid #eee;
+
+}
+
+.perfil-stats span{
+
+font-size:20px;
+
+font-weight:700;
+
+}
+
+.modal{
+
+position:fixed;
+
+inset:0;
+
+background:rgba(0,0,0,.45);
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+opacity:0;
+
+pointer-events:none;
+
+transition:.2s;
+
+z-index:10000;
+
+}
+
+.modal.open{
+
+opacity:1;
+
+pointer-events:auto;
+
+}
+
+.modal-box{
+
+background:white;
+
+padding:25px;
+
+border-radius:14px;
+
+width:340px;
+
+}
+
+.modal-actions{
+
+display:flex;
+
+gap:10px;
+
+justify-content:flex-end;
+
+margin-top:15px;
+
+}
+
+.modal-box input,
+.modal-box textarea{
+
+width:100%;
+
+margin-top:10px;
+
+padding:8px;
+
+border:1px solid #ddd;
+
+border-radius:6px;
+
+}
+
+.btn-primary{
+
+background:#2563eb;
+
+color:white;
+
+border:none;
+
+padding:8px 14px;
+
+border-radius:6px;
+
+cursor:pointer;
+
+}
+
+.btn-danger{
+
+background:#ef4444;
+
+color:white;
+
+border:none;
+
+padding:8px 14px;
+
+border-radius:6px;
+
+}
+
+.toast{
+
+position:fixed;
+
+bottom:25px;
+
+right:25px;
+
+background:#1f2937;
+
+color:white;
+
+padding:10px 18px;
+
+border-radius:8px;
+
+opacity:0;
+
+transform:translateY(10px);
+
+transition:.2s;
+
+}
+
+.toast.show{
+
+opacity:1;
+
+transform:translateY(0);
+
+}
+
+`;
+
+document.head.appendChild(style);
+
+}
+
+
+/* ═══════════════════════════════
+   INIT
+═══════════════════════════════ */
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+inyectarUI();
+
+initSidebar();
+
+initPerfil();
+
+initCursos();
+
+initNuevoModulo();
+
+initCerrarSesion();
 
 });
