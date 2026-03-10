@@ -63,13 +63,13 @@ loginbtn.addEventListener("click", ()=>{
             if (password !== name.contraseña) throw new Error(alert("Usuario o contraseña incorrectos"))
             switch (name.rol){
                 case roles[0]:
-                    window.location.href = "./dashAdm.html"
+                    window.location.href = "../pages/dashboard1.html"
                     break
                 case roles[1]:
-                    window.location.href = "./dashDoc.html"
+                    window.location.href = "../pages/dashboard2.html"
                     break
                 case roles[2]:
-                    window.location.href = "./dashEst.html"
+                    window.location.href = "../pages/dashboard3.html"
                     break
             }
         }
