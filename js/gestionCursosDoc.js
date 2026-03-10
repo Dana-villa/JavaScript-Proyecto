@@ -145,7 +145,324 @@ const cursosData = [
   }
 ];
 
-// ── MODAL HTML ───────────────────────────────────────────────────────────────
+// ── ESTILOS DROPDOWN DOCENTE + MODAL LOGOUT + TOAST ──────────────────────────
+function inyectarEstilosUI() {
+  const style = document.createElement('style');
+  style.textContent = `
+    /* ── Dropdown flotante del docente ── */
+    .avatar-container { position: relative; }
+
+    .avatar-dropdown {
+      position: absolute;
+      top: calc(100% + 14px);
+      right: 0;
+      width: 290px;
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.18), 0 2px 10px rgba(0,0,0,0.08);
+      z-index: 999;
+      overflow: hidden;
+      transform-origin: top right;
+      transform: scale(0.92) translateY(-8px);
+      opacity: 0;
+      pointer-events: none;
+      transition: transform 0.24s cubic-bezier(.34,1.56,.64,1),
+                  opacity 0.18s ease;
+    }
+    .avatar-dropdown.open {
+      transform: scale(1) translateY(0);
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Cabecera con gradiente */
+    .dropdown-header {
+      position: relative;
+      background: linear-gradient(135deg, #a78bfa 0%, #7c9ef8 50%, #93c5fd 100%);
+      padding: 28px 20px 22px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+
+    /* Botón X de cierre */
+    .dropdown-close-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.3);
+      border: none;
+      color: #fff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: background 0.15s;
+      font-family: 'Inter', sans-serif;
+    }
+    .dropdown-close-btn:hover { background: rgba(255,255,255,0.5); }
+
+    /* Avatar centrado con borde blanco */
+    .dropdown-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 3px solid #ffffff;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      margin-bottom: 10px;
+    }
+    .dropdown-user-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 3px;
+    }
+    .dropdown-user-role {
+      font-size: 11px;
+      font-weight: 700;
+      color: rgba(255,255,255,0.9);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    .dropdown-user-email {
+      font-size: 12px;
+      color: rgba(255,255,255,0.82);
+    }
+
+    /* Estadísticas */
+    .dropdown-stats {
+      display: flex;
+      margin: 16px;
+      gap: 8px;
+    }
+    .dropdown-stat {
+      flex: 1;
+      background: #f8fafc;
+      border: 1px solid #e8edf5;
+      border-radius: 12px;
+      padding: 10px 6px 8px;
+      text-align: center;
+    }
+    .dropdown-stat-value {
+      font-size: 20px;
+      font-weight: 800;
+      color: #111827;
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+    .dropdown-stat-label {
+      font-size: 9.5px;
+      font-weight: 600;
+      color: #9ca3af;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    /* ── Modal cierre de sesión ── */
+    .logout-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,0.45);
+      backdrop-filter: blur(3px);
+      z-index: 2000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+    .logout-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .logout-modal {
+      background: #fff;
+      border-radius: 20px;
+      padding: 32px 28px 24px;
+      width: 340px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+      transform: scale(0.9) translateY(10px);
+      transition: transform 0.25s cubic-bezier(.34,1.56,.64,1);
+    }
+    .logout-overlay.open .logout-modal {
+      transform: scale(1) translateY(0);
+    }
+    .logout-modal-icon { font-size: 40px; margin-bottom: 14px; }
+    .logout-modal-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 8px;
+    }
+    .logout-modal-text {
+      font-size: 13.5px;
+      color: #6b7280;
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+    .logout-modal-actions { display: flex; gap: 10px; }
+    .btn-cancel-logout,
+    .btn-confirm-logout {
+      flex: 1;
+      padding: 11px 0;
+      border-radius: 10px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.18s, transform 0.1s;
+    }
+    .btn-cancel-logout { background: #f1f5f9; color: #374151; }
+    .btn-cancel-logout:hover { background: #e2e8f0; }
+    .btn-confirm-logout { background: #dc2626; color: #fff; }
+    .btn-confirm-logout:hover { background: #b91c1c; transform: translateY(-1px); }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      background: #1e293b;
+      color: #fff;
+      padding: 12px 20px;
+      border-radius: 12px;
+      font-size: 13.5px;
+      font-weight: 500;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      z-index: 3000;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: transform 0.3s ease, opacity 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .toast.show { transform: translateY(0); opacity: 1; }
+
+    /* ── Sidebar active ── */
+    .menu-item.active {
+      background: rgba(255,255,255,0.15) !important;
+    }
+  `;
+  document.head.appendChild(style);
+}
+
+// ── DROPDOWN DEL DOCENTE ──────────────────────────────────────────────────────
+function initDropdownDocente() {
+  const avatarContainer = document.querySelector('.avatar-container');
+  if (!avatarContainer) return;
+
+  const dropdown = document.createElement('div');
+  dropdown.className = 'avatar-dropdown';
+  dropdown.innerHTML = `
+    <div class="dropdown-header">
+      <button class="dropdown-close-btn">✕</button>
+      <img src="../images/profesor.png" alt="Foto de perfil" class="dropdown-avatar">
+      <span class="dropdown-user-name">Docente García</span>
+      <span class="dropdown-user-role">Docente · Tecnología</span>
+      <span class="dropdown-user-email">docen.garcia@abc.com</span>
+    </div>
+    <div class="dropdown-stats">
+      <div class="dropdown-stat">
+        <div class="dropdown-stat-value">6</div>
+        <div class="dropdown-stat-label">Cursos</div>
+      </div>
+      <div class="dropdown-stat">
+        <div class="dropdown-stat-value">180</div>
+        <div class="dropdown-stat-label">Alumnos</div>
+      </div>
+      <div class="dropdown-stat">
+        <div class="dropdown-stat-value">0</div>
+        <div class="dropdown-stat-label">Pendientes</div>
+      </div>
+    </div>
+  `;
+  avatarContainer.appendChild(dropdown);
+
+  // Abrir / cerrar al hacer clic en el avatar
+  avatarContainer.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = dropdown.classList.contains('open');
+    dropdown.classList.toggle('open', !isOpen);
+  });
+
+  // Impedir que clics dentro del dropdown lo cierren
+  dropdown.addEventListener('click', e => e.stopPropagation());
+
+  // Botón ✕
+  dropdown.querySelector('.dropdown-close-btn').addEventListener('click', (e) => {
+    e.stopPropagation();
+    dropdown.classList.remove('open');
+  });
+
+  // Cerrar al hacer clic fuera
+  document.addEventListener('click', () => dropdown.classList.remove('open'));
+}
+
+// ── MODAL DE CIERRE DE SESIÓN ─────────────────────────────────────────────────
+function crearLogoutModal() {
+  const logoutOverlay = document.createElement('div');
+  logoutOverlay.className = 'logout-overlay';
+  logoutOverlay.id = 'logout-overlay';
+  logoutOverlay.innerHTML = `
+    <div class="logout-modal">
+      <div class="logout-modal-icon">🔒</div>
+      <h2 class="logout-modal-title">¿Cerrar sesión?</h2>
+      <p class="logout-modal-text">
+        Tu sesión se cerrará y serás redirigido<br>a la página de inicio de sesión.
+      </p>
+      <div class="logout-modal-actions">
+        <button class="btn-cancel-logout">Cancelar</button>
+        <button class="btn-confirm-logout">Sí, cerrar sesión</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(logoutOverlay);
+
+  logoutOverlay.querySelector('.btn-cancel-logout').addEventListener('click', cerrarLogout);
+  logoutOverlay.addEventListener('click', e => { if (e.target === logoutOverlay) cerrarLogout(); });
+  logoutOverlay.querySelector('.btn-confirm-logout').addEventListener('click', () => {
+    cerrarLogout();
+    showToast('👋 Cerrando sesión...');
+    setTimeout(() => { window.location.href = '../index.html'; }, 1200);
+  });
+}
+
+function abrirLogout() {
+  document.getElementById('logout-overlay')?.classList.add('open');
+}
+function cerrarLogout() {
+  document.getElementById('logout-overlay')?.classList.remove('open');
+}
+
+// ── TOAST ─────────────────────────────────────────────────────────────────────
+let _toastTimeout = null;
+function showToast(message, duration = 2800) {
+  let toast = document.querySelector('.toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.className = 'toast';
+    document.body.appendChild(toast);
+  }
+  clearTimeout(_toastTimeout);
+  toast.textContent = message;
+  toast.classList.add('show');
+  _toastTimeout = setTimeout(() => toast.classList.remove('show'), duration);
+}
+
+// ── MODAL DE LECCIONES (HTML) ─────────────────────────────────────────────────
 function crearModal() {
   const overlay = document.createElement("div");
   overlay.id = "modal-overlay";
@@ -156,27 +473,24 @@ function crearModal() {
           <path d="M4 4L16 16M16 4L4 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
         </svg>
       </button>
-
       <div class="modal-body" id="modal-body"></div>
     </div>
   `;
   document.body.appendChild(overlay);
 }
 
-// ── RENDER MODAL ─────────────────────────────────────────────────────────────
+// ── RENDER MODAL DE LECCIONES ─────────────────────────────────────────────────
 function abrirModal(cursoId) {
   const curso = cursosData.find(c => c.id === cursoId);
   if (!curso) return;
 
-  const overlay  = document.getElementById("modal-overlay");
-  const card     = document.getElementById("modal-card");
-  const body     = document.getElementById("modal-body");
+  const overlay = document.getElementById("modal-overlay");
+  const card    = document.getElementById("modal-card");
+  const body    = document.getElementById("modal-body");
 
-  // Color accent del curso
   card.style.setProperty("--curso-color", curso.color);
   card.style.setProperty("--curso-bg",    curso.colorBg);
 
-  // Módulos
   body.innerHTML = curso.modulos.map(mod => `
     <div class="modulo-item">
       <div class="modulo-icon-wrap" style="color:${curso.color}; background:${curso.colorBg}">
@@ -198,7 +512,6 @@ function abrirModal(cursoId) {
 
   overlay.classList.add("active");
   document.body.style.overflow = "hidden";
-  // pequeña animación de entrada
   requestAnimationFrame(() => card.classList.add("visible"));
 }
 
@@ -212,11 +525,10 @@ function cerrarModal() {
   }, 280);
 }
 
-// ── ESTILOS DEL MODAL (inyectados en <head>) ─────────────────────────────────
+// ── ESTILOS DEL MODAL DE LECCIONES ───────────────────────────────────────────
 function inyectarEstilosModal() {
   const style = document.createElement("style");
   style.textContent = `
-    /* ── OVERLAY ── */
     #modal-overlay {
       position: fixed;
       inset: 0;
@@ -230,7 +542,6 @@ function inyectarEstilosModal() {
     }
     #modal-overlay.active { display: flex; }
 
-    /* ── CARD ── */
     .modal-card {
       background: #fff;
       border-radius: 20px;
@@ -244,17 +555,11 @@ function inyectarEstilosModal() {
       transform: translateY(24px) scale(0.97);
       transition: opacity 0.28s ease, transform 0.28s ease;
     }
-    .modal-card.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-
-    /* Scrollbar dentro del modal */
+    .modal-card.visible { opacity: 1; transform: translateY(0) scale(1); }
     .modal-card::-webkit-scrollbar { width: 6px; }
     .modal-card::-webkit-scrollbar-track { background: transparent; }
     .modal-card::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
 
-    /* ── CERRAR ── */
     .modal-close {
       position: sticky;
       top: 14px;
@@ -276,43 +581,6 @@ function inyectarEstilosModal() {
     }
     .modal-close:hover { background: #e2e8f0; color: #1e293b; }
 
-    /* ── HEADER ── */
-    .modal-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      padding: 20px 24px 18px;
-      margin-top: -36px; /* compensa el botón flotante */
-      padding-top: 14px;
-    }
-    .modal-header-thumb {
-      width: 88px;
-      height: 62px;
-      border-radius: 10px;
-      overflow: hidden;
-      flex-shrink: 0;
-      background: #1e293b;
-    }
-    .modal-header-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .modal-header-info { flex: 1; }
-    .modal-titulo {
-      font-size: 17px;
-      font-weight: 700;
-      color: #111827;
-      line-height: 1.25;
-      margin-bottom: 5px;
-    }
-    .modal-desc {
-      font-size: 13px;
-      color: #6b7280;
-      line-height: 1.5;
-    }
-
-    /* ── BODY ── */
     .modal-body {
       padding: 6px 24px 28px;
       display: flex;
@@ -320,7 +588,6 @@ function inyectarEstilosModal() {
       gap: 16px;
     }
 
-    /* ── MÓDULO ── */
     .modulo-item {
       display: flex;
       margin-top: 20px;
@@ -377,11 +644,8 @@ function inyectarEstilosModal() {
       margin-top: 5px;
     }
 
-    /* ── RESPONSIVE ── */
     @media (max-width: 520px) {
       .modal-card { border-radius: 14px; }
-      .modal-header { flex-direction: column; }
-      .modal-header-thumb { width: 100%; height: 120px; }
     }
   `;
   document.head.appendChild(style);
@@ -395,12 +659,10 @@ function vincularTarjetas() {
   tarjetas.forEach((card, i) => {
     const id = ids[i];
     if (!id) return;
-
     card.setAttribute("data-curso", id);
     card.setAttribute("role", "button");
     card.setAttribute("tabindex", "0");
-    card.setAttribute("aria-label", `Ver lecciones: ${cursosData.find(c=>c.id===id)?.titulo}`);
-
+    card.setAttribute("aria-label", `Ver lecciones: ${cursosData.find(c => c.id === id)?.titulo}`);
     card.addEventListener("click", () => abrirModal(id));
     card.addEventListener("keydown", e => {
       if (e.key === "Enter" || e.key === " ") { e.preventDefault(); abrirModal(id); }
@@ -408,17 +670,43 @@ function vincularTarjetas() {
   });
 }
 
-// ── SIDEBAR NAVIGATION ────────────────────────────────────────────────────────
+// ── SIDEBAR ───────────────────────────────────────────────────────────────────
 function initSidebar() {
-  document.querySelectorAll(".menu-item").forEach(item => {
+  const menuItems = document.querySelectorAll(".menu-item");
+
+  // Marcar el ítem activo según la página actual
+  const currentPage = window.location.pathname.split('/').pop().replace('.html', '');
+  const pageMapping = {
+    'gestionCursosDoc': 'cursos',
+    'dashboard': 'dashboard',
+  };
+  const activePath = pageMapping[currentPage] || 'cursos';
+  menuItems.forEach(m => {
+    m.classList.toggle('active', m.dataset.path === activePath);
+  });
+
+  // Navegación
+  const routes = {
+    'dashboard': '../pages/dashboard2.html',
+    'cursos':    '../pages/gestionCursosDoc.html',
+  };
+  menuItems.forEach(item => {
     item.addEventListener("click", () => {
-      document.querySelectorAll(".menu-item").forEach(m => m.classList.remove("active"));
+      menuItems.forEach(m => m.classList.remove("active"));
       item.classList.add("active");
+      const url = routes[item.dataset.path];
+      if (url) setTimeout(() => { window.location.href = url; }, 150);
     });
   });
+
+  // Botón cerrar sesión del sidebar
+  const cerrarSesionBtn = document.querySelector('.cerrar-sesion');
+  if (cerrarSesionBtn) {
+    cerrarSesionBtn.addEventListener('click', abrirLogout);
+  }
 }
 
-// ── CERRAR MODAL (overlay click / botón / Escape) ─────────────────────────────
+// ── CERRAR MODAL DE LECCIONES ─────────────────────────────────────────────────
 function initCerrarModal() {
   document.getElementById("modal-close").addEventListener("click", cerrarModal);
   document.getElementById("modal-overlay").addEventListener("click", e => {
@@ -435,17 +723,249 @@ function initNotificacion() {
   if (!bell) return;
   bell.addEventListener("click", () => {
     const badge = bell.querySelector(".notificacion-badge");
-    if (badge) { badge.style.display = "none"; }
+    if (badge) badge.style.display = "none";
+    showToast('🔔 Sin notificaciones nuevas');
   });
 }
 
+/* ══════════════════════════════════════════════════════
+   POPUP PERFIL USUARIO
+   ══════════════════════════════════════════════════════ */
+
+function inyectarPopupPerfil() {
+
+  const usuario = {
+    nombre: "Docente García",
+    rol: "PROFESOR",
+    area: "TECNOLOGIA",
+    email: "docen.garcia@abc.com",
+    cursos: docentes.length,
+    docentes: docentes.length,
+    pendientes: 0,
+    avatar: "../images/jefe.png"
+  };
+
+  const html = `
+  <div id="popup-perfil" class="perfil-popup">
+
+    <button id="perfil-close" class="perfil-popup__close">&times;</button>
+
+    <div class="perfil-popup__banner"></div>
+
+    <div class="perfil-popup__avatar-wrap">
+      <img src="${usuario.avatar}" class="perfil-popup__avatar">
+    </div>
+
+    <div class="perfil-popup__body">
+
+      <h3 class="perfil-popup__nombre">${usuario.nombre}</h3>
+
+      <p class="perfil-popup__rol">
+        ${usuario.rol} · ${usuario.area}
+      </p>
+
+      <p class="perfil-popup__email">
+        ${usuario.email}
+      </p>
+
+      <div class="perfil-popup__stats">
+
+        <div class="perfil-stat">
+          <span class="perfil-stat__num">${usuario.cursos}</span>
+          <span class="perfil-stat__lbl">CURSOS</span>
+        </div>
+
+        <div class="perfil-stat perfil-stat--divider">
+          <span class="perfil-stat__num">${usuario.docentes}</span>
+          <span class="perfil-stat__lbl">DOCENTES</span>
+        </div>
+
+        <div class="perfil-stat">
+          <span class="perfil-stat__num">${usuario.pendientes}</span>
+          <span class="perfil-stat__lbl">PENDIENTES</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  `;
+
+  document.body.insertAdjacentHTML("beforeend", html);
+
+  inyectarEstilosPerfil();
+}
+
+function inyectarEstilosPerfil() {
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+
+  .perfil-popup{
+    position:fixed;
+    top:70px;
+    right:24px;
+    width:280px;
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 14px 40px rgba(0,0,0,.25);
+    z-index:8000;
+    overflow:hidden;
+
+    opacity:0;
+    transform:translateY(-10px) scale(.96);
+    pointer-events:none;
+    transition:.2s;
+  }
+
+  .perfil-popup.is-open{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    pointer-events:auto;
+  }
+
+  .perfil-popup__banner{
+    height:76px;
+    background:linear-gradient(135deg,#a78bfa,#60a5fa,#f472b6);
+  }
+
+  .perfil-popup__close{
+    position:absolute;
+    top:10px;
+    right:12px;
+    background:rgba(255,255,255,.3);
+    border:none;
+    color:#fff;
+    font-size:18px;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    cursor:pointer;
+  }
+
+  .perfil-popup__avatar-wrap{
+    display:flex;
+    justify-content:center;
+    margin-top:-36px;
+  }
+
+  .perfil-popup__avatar{
+    width:74px;
+    height:74px;
+    border-radius:50%;
+    border:3px solid #fff;
+    object-fit:cover;
+  }
+
+  .perfil-popup__body{
+    padding:12px 20px 20px;
+    text-align:center;
+  }
+
+  .perfil-popup__nombre{
+    font-size:16px;
+    font-weight:700;
+  }
+
+  .perfil-popup__rol{
+    font-size:11px;
+    font-weight:700;
+    color:#8b5cf6;
+  }
+
+  .perfil-popup__email{
+    font-size:12px;
+    color:#6b7280;
+  }
+
+  .perfil-popup__stats{
+    display:flex;
+    justify-content:center;
+    margin-top:12px;
+    border-top:1px solid #eee;
+    border-bottom:1px solid #eee;
+    padding:12px 0;
+  }
+
+  .perfil-stat{
+    flex:1;
+    text-align:center;
+  }
+
+  .perfil-stat--divider{
+    border-left:1px solid #eee;
+    border-right:1px solid #eee;
+  }
+
+  .perfil-stat__num{
+    font-size:20px;
+    font-weight:700;
+  }
+
+  .perfil-stat__lbl{
+    font-size:9px;
+    color:#9ca3af;
+  }
+
+  .avatar-container{
+    cursor:pointer;
+  }
+
+  `;
+
+  document.head.appendChild(style);
+}
+
+function initPopupPerfil(){
+
+  const avatar = document.querySelector(".avatar-container");
+  const popup = document.getElementById("popup-perfil");
+
+  if(!avatar || !popup) return;
+
+  avatar.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    popup.classList.toggle("is-open");
+  });
+
+  document.addEventListener("click",(e)=>{
+    if(!popup.contains(e.target) && !avatar.contains(e.target)){
+      popup.classList.remove("is-open");
+    }
+  });
+
+  document.getElementById("perfil-close")?.addEventListener("click",()=>{
+    popup.classList.remove("is-open");
+  });
+
+}
+
 // ── INIT ──────────────────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  inyectarModal();
+  inyectarModalLogout();
+  renderGrid();
+  initEventos();
+});
+document.addEventListener('DOMContentLoaded', () => {
+  inyectarModal();
+  inyectarModalLogout();
+  inyectarPopupPerfil();   // NUEVO
+  renderGrid();
+  initEventos();
+  initPopupPerfil();       // NUEVO
+});
+
 document.addEventListener("DOMContentLoaded", () => {
-  inyectarEstilosModal();
-  crearModal();
-  vincularTarjetas();
-  initCerrarModal();
-  initSidebar();
-  initBtnAdd();
-  initNotificacion();
+  inyectarEstilosUI();       // estilos dropdown, logout, toast
+  inyectarEstilosModal();    // estilos modal de lecciones
+  initDropdownDocente();     // ventana flotante del docente
+  crearLogoutModal();        // modal de confirmación de cierre de sesión
+  crearModal();              // modal de lecciones
+  vincularTarjetas();        // click en tarjetas de cursos
+  initCerrarModal();         // cierre del modal de lecciones
+  initSidebar();             // navegación sidebar + cerrar sesión
+  initNotificacion();        // badge de notificaciones
 });

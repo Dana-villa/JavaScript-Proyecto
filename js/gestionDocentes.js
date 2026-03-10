@@ -525,13 +525,404 @@ function initEventos() {
     }
   });
 
-  // Sidebar navegación (placeholder)
-  document.querySelectorAll('.menu-item').forEach(item => {
+  // ── SIDEBAR NAVEGACIÓN ──
+  initSidebar();
+
+  // ── CERRAR SESIÓN ──
+  initCerrarSesion();
+}
+
+/* ══════════════════════════════════════════════════════
+   SIDEBAR — NAVEGACIÓN
+   ══════════════════════════════════════════════════════ */
+
+// Mapa: data-path → ruta del archivo HTML relativo a pages/gestionDocentes.html
+const RUTAS_SIDEBAR = {
+  dashboard : 'dashboard1.html',
+  cursos    : 'gestionCursosAdm.html',
+  docentes  : 'gestionDocentes.html',
+  lecciones : 'dashDoc.html',
+  admin     : 'moduloAdm.html',
+};
+
+const ARCHIVO_A_PATH = {
+  'dashboard1.html'      : 'dashboard',
+  'gestionCursosAdm.html': 'cursos',
+  'gestionDocentes.html' : 'docentes',
+  'dashDoc.html'         : 'lecciones',
+  'moduloAdm.html'       : 'admin',
+};
+
+function initSidebar() {
+  const items = document.querySelectorAll('.menu-item[data-path]');
+
+  items.forEach(item => {
     item.addEventListener('click', () => {
-      document.querySelectorAll('.menu-item').forEach(i => i.classList.remove('active'));
+      const path = item.dataset.path;
+
+      // Si ya estamos en esta sección, no hacer nada
+      if (item.classList.contains('active')) return;
+
+      const ruta = RUTAS_SIDEBAR[path];
+
+      if (ruta) {
+        // Animación de salida rápida antes de navegar
+        document.querySelector('.main-content')?.classList.add('page-exit');
+        setTimeout(() => {
+          window.location.href = ruta;
+        }, 180);
+      } else {
+        // Sección sin página aún — feedback visual
+        mostrarToast(`Módulo "${item.querySelector('span')?.innerText.replace('\n', ' ')}" próximamente`, 'info');
+      }
+
+      // Marcar activo visualmente de inmediato
+      items.forEach(i => i.classList.remove('active'));
       item.classList.add('active');
     });
   });
+
+  // Resaltar el item correcto según la URL actual
+  const paginaActual = window.location.pathname.split('/').pop();
+  // Mapa inverso nombre-archivo → data-path
+  const ARCHIVO_A_PATH = {
+    'dashAdm.html'       : 'dashboard',
+    'gestionCursosAdm.html': 'cursos',
+    'gestionDocentes.html' : 'docentes',
+    'dashDoc.html'         : 'lecciones',
+    'moduloAdm.html'       : 'admin',
+  };
+  const pathActivo = ARCHIVO_A_PATH[paginaActual];
+  items.forEach(item => {
+    item.classList.toggle('active', item.dataset.path === pathActivo);
+  });
+}
+
+/* ══════════════════════════════════════════════════════
+   CERRAR SESIÓN
+   ══════════════════════════════════════════════════════ */
+function initCerrarSesion() {
+  const btnCerrar = document.querySelector('.cerrar-sesion');
+  if (!btnCerrar) return;
+
+  btnCerrar.addEventListener('click', () => {
+    abrirModalCerrarSesion();
+  });
+}
+
+function abrirModalCerrarSesion() {
+  document.getElementById('modal-logout').classList.add('is-open');
+}
+
+function cerrarModalCerrarSesion() {
+  document.getElementById('modal-logout').classList.remove('is-open');
+}
+
+function ejecutarCerrarSesion() {
+  // Limpiar sesión del localStorage (NO borra los datos de docentes)
+  localStorage.removeItem('session_usuario');
+
+  // Animación de salida
+  document.querySelector('.dashboard')?.classList.add('page-exit');
+
+  setTimeout(() => {
+    window.location.href = 'loginPage.html';
+  }, 220);
+}
+
+/* ── Inyectar modal de cerrar sesión + estilos extra ── */
+function inyectarModalLogout() {
+  const html = `
+  <div id="modal-logout" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="logout-title">
+    <div class="modal-box modal-box--sm">
+      <div class="modal-header">
+        <h2 id="logout-title" class="modal-title">Cerrar Sesión</h2>
+        <button id="logout-close" class="modal-close" aria-label="Cerrar">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="logout-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+            <polyline points="16 17 21 12 16 7"/>
+            <line x1="21" y1="12" x2="9" y2="12"/>
+          </svg>
+        </div>
+        <p class="confirm-msg" style="text-align:center">
+          ¿Deseas cerrar la sesión actual?<br>
+          <span style="font-size:12px;color:#9ca3af">Se redirigirá a la página de inicio de sesión.</span>
+        </p>
+      </div>
+      <div class="modal-footer">
+        <button id="btn-logout-cancel" class="btn-modal btn-modal--cancel">Cancelar</button>
+        <button id="btn-logout-confirm" class="btn-modal btn-modal--logout">Cerrar Sesión</button>
+      </div>
+    </div>
+  </div>`;
+
+  document.body.insertAdjacentHTML('beforeend', html);
+
+  // Estilos extra para logout y animaciones de página
+  const style = document.createElement('style');
+  style.textContent = `
+    .btn-modal--logout {
+      background: #dc2626; color: #fff;
+    }
+    .btn-modal--logout:hover { background: #b91c1c; }
+
+    .logout-icon {
+      display: flex; justify-content: center; margin-bottom: 4px;
+    }
+    .logout-icon svg {
+      width: 44px; height: 44px;
+      color: #dc2626; opacity: .8;
+    }
+
+    /* Animación salida de página */
+    .page-exit {
+      animation: fadeOut .18s ease forwards;
+    }
+    @keyframes fadeOut {
+      to { opacity: 0; transform: translateY(-6px); }
+    }
+
+    /* Animación entrada de página */
+    .main-content, .sidebar {
+      animation: fadeIn .3s ease both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Toast variante info */
+    .toast--info { border-left: 4px solid #3b82f6; }
+
+    /* Hover sidebar - cursor pointer en cerrar sesión */
+    .cerrar-sesion { cursor: pointer; user-select: none; }
+  `;
+  document.head.appendChild(style);
+
+  // Eventos del modal logout
+  document.getElementById('logout-close')?.addEventListener('click', cerrarModalCerrarSesion);
+  document.getElementById('btn-logout-cancel')?.addEventListener('click', cerrarModalCerrarSesion);
+  document.getElementById('modal-logout')?.addEventListener('click', e => {
+    if (e.target === e.currentTarget) cerrarModalCerrarSesion();
+  });
+  document.getElementById('btn-logout-confirm')?.addEventListener('click', ejecutarCerrarSesion);
+}
+
+/* ══════════════════════════════════════════════════════
+   POPUP PERFIL USUARIO
+   ══════════════════════════════════════════════════════ */
+
+function inyectarPopupPerfil() {
+
+  const usuario = {
+    nombre: "User Pérez",
+    rol: "ADMINISTRADOR",
+    area: "SISTEMAS",
+    email: "adm.perez@abc.com",
+    cursos: docentes.length,
+    docentes: docentes.length,
+    pendientes: 0,
+    avatar: "../images/jefe.png"
+  };
+
+  const html = `
+  <div id="popup-perfil" class="perfil-popup">
+
+    <button id="perfil-close" class="perfil-popup__close">&times;</button>
+
+    <div class="perfil-popup__banner"></div>
+
+    <div class="perfil-popup__avatar-wrap">
+      <img src="${usuario.avatar}" class="perfil-popup__avatar">
+    </div>
+
+    <div class="perfil-popup__body">
+
+      <h3 class="perfil-popup__nombre">${usuario.nombre}</h3>
+
+      <p class="perfil-popup__rol">
+        ${usuario.rol} · ${usuario.area}
+      </p>
+
+      <p class="perfil-popup__email">
+        ${usuario.email}
+      </p>
+
+      <div class="perfil-popup__stats">
+
+        <div class="perfil-stat">
+          <span class="perfil-stat__num">${usuario.cursos}</span>
+          <span class="perfil-stat__lbl">CURSOS</span>
+        </div>
+
+        <div class="perfil-stat perfil-stat--divider">
+          <span class="perfil-stat__num">${usuario.docentes}</span>
+          <span class="perfil-stat__lbl">DOCENTES</span>
+        </div>
+
+        <div class="perfil-stat">
+          <span class="perfil-stat__num">${usuario.pendientes}</span>
+          <span class="perfil-stat__lbl">PENDIENTES</span>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+  `;
+
+  document.body.insertAdjacentHTML("beforeend", html);
+
+  inyectarEstilosPerfil();
+}
+
+function inyectarEstilosPerfil() {
+
+  const style = document.createElement("style");
+
+  style.textContent = `
+
+  .perfil-popup{
+    position:fixed;
+    top:70px;
+    right:24px;
+    width:280px;
+    background:#fff;
+    border-radius:20px;
+    box-shadow:0 14px 40px rgba(0,0,0,.25);
+    z-index:8000;
+    overflow:hidden;
+
+    opacity:0;
+    transform:translateY(-10px) scale(.96);
+    pointer-events:none;
+    transition:.2s;
+  }
+
+  .perfil-popup.is-open{
+    opacity:1;
+    transform:translateY(0) scale(1);
+    pointer-events:auto;
+  }
+
+  .perfil-popup__banner{
+    height:76px;
+    background:linear-gradient(135deg,#a78bfa,#60a5fa,#f472b6);
+  }
+
+  .perfil-popup__close{
+    position:absolute;
+    top:10px;
+    right:12px;
+    background:rgba(255,255,255,.3);
+    border:none;
+    color:#fff;
+    font-size:18px;
+    width:26px;
+    height:26px;
+    border-radius:50%;
+    cursor:pointer;
+  }
+
+  .perfil-popup__avatar-wrap{
+    display:flex;
+    justify-content:center;
+    margin-top:-36px;
+  }
+
+  .perfil-popup__avatar{
+    width:74px;
+    height:74px;
+    border-radius:50%;
+    border:3px solid #fff;
+    object-fit:cover;
+  }
+
+  .perfil-popup__body{
+    padding:12px 20px 20px;
+    text-align:center;
+  }
+
+  .perfil-popup__nombre{
+    font-size:16px;
+    font-weight:700;
+  }
+
+  .perfil-popup__rol{
+    font-size:11px;
+    font-weight:700;
+    color:#8b5cf6;
+  }
+
+  .perfil-popup__email{
+    font-size:12px;
+    color:#6b7280;
+  }
+
+  .perfil-popup__stats{
+    display:flex;
+    justify-content:center;
+    margin-top:12px;
+    border-top:1px solid #eee;
+    border-bottom:1px solid #eee;
+    padding:12px 0;
+  }
+
+  .perfil-stat{
+    flex:1;
+    text-align:center;
+  }
+
+  .perfil-stat--divider{
+    border-left:1px solid #eee;
+    border-right:1px solid #eee;
+  }
+
+  .perfil-stat__num{
+    font-size:20px;
+    font-weight:700;
+  }
+
+  .perfil-stat__lbl{
+    font-size:9px;
+    color:#9ca3af;
+  }
+
+  .avatar-container{
+    cursor:pointer;
+  }
+
+  `;
+
+  document.head.appendChild(style);
+}
+
+function initPopupPerfil(){
+
+  const avatar = document.querySelector(".avatar-container");
+  const popup = document.getElementById("popup-perfil");
+
+  if(!avatar || !popup) return;
+
+  avatar.addEventListener("click",(e)=>{
+    e.stopPropagation();
+    popup.classList.toggle("is-open");
+  });
+
+  document.addEventListener("click",(e)=>{
+    if(!popup.contains(e.target) && !avatar.contains(e.target)){
+      popup.classList.remove("is-open");
+    }
+  });
+
+  document.getElementById("perfil-close")?.addEventListener("click",()=>{
+    popup.classList.remove("is-open");
+  });
+
 }
 
 /* ══════════════════════════════════════════════════════
@@ -539,6 +930,15 @@ function initEventos() {
    ══════════════════════════════════════════════════════ */
 document.addEventListener('DOMContentLoaded', () => {
   inyectarModal();
+  inyectarModalLogout();
   renderGrid();
   initEventos();
+});
+document.addEventListener('DOMContentLoaded', () => {
+  inyectarModal();
+  inyectarModalLogout();
+  inyectarPopupPerfil();   // NUEVO
+  renderGrid();
+  initEventos();
+  initPopupPerfil();       // NUEVO
 });

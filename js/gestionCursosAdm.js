@@ -145,13 +145,53 @@ const cursosData = [
   }
 ];
 
-// ── NAVEGACIÓN: mapeo de rutas a URLs ─────────────────────────────────────────
-const routeMap = {
-  ashboard:  "../pages/dashAdm.html",
-  cursos:     "../pages/gestionCursosAdm.html",
-  docentes:   "../pages/gestionDocentes.html",
-  admin:      "../pages/moduloAdm.html"
+/* ══════════════════════════════════════════════════════
+   SIDEBAR — NAVEGACIÓN
+   ══════════════════════════════════════════════════════ */
+
+const RUTAS_SIDEBAR = {
+  dashboard : 'dashboard1.html',
+  cursos    : 'gestionCursosAdm.html',
+  docentes  : 'gestionDocentes.html',
+  lecciones : 'dashDoc.html',
+  admin     : 'moduloAdm.html',
 };
+
+const ARCHIVO_A_PATH = {
+  'dashboard1.html'       : 'dashboard',
+  'gestionCursosAdm.html' : 'cursos',
+  'gestionDocentes.html'  : 'docentes',
+  'dashDoc.html'          : 'lecciones',
+  'moduloAdm.html'        : 'admin',
+};
+
+function initSidebar() {
+  const items = document.querySelectorAll('.menu-item[data-path]');
+  const pathCompleto = window.location.pathname;
+  const paginaActual = pathCompleto.substring(pathCompleto.lastIndexOf('/') + 1);
+  const pathActivo   = ARCHIVO_A_PATH[paginaActual];
+
+  items.forEach(item => {
+    item.classList.toggle('active', item.dataset.path === pathActivo);
+  });
+
+  items.forEach(item => {
+    item.addEventListener('click', () => {
+      if (item.classList.contains('active')) return;
+
+      const ruta = RUTAS_SIDEBAR[item.dataset.path];
+      if (ruta) {
+        document.querySelector('.main-content')?.classList.add('page-exit');
+        setTimeout(() => { window.location.href = ruta; }, 180);
+      } else {
+        mostrarToast('Módulo próximamente disponible', 'info');
+      }
+
+      items.forEach(i => i.classList.remove('active'));
+      item.classList.add('active');
+    });
+  });
+}
 
 // ── MODAL DE VER LECCIONES (HTML) ─────────────────────────────────────────────
 function crearModal() {
