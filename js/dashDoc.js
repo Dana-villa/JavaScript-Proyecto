@@ -222,7 +222,8 @@ document.addEventListener('DOMContentLoaded', () => {
     menuItems.forEach(item => {
       const path = item.dataset.path;
       if ((path === 'dashboard' && currentPage === 'dashDoc.html') ||
-          (path === 'cursos' && currentPage === 'gestionCursosDoc.html')) {
+          (path === 'cursos' && currentPage === 'gestionCursosDoc.html')||
+          (path === 'cursos' && currentPage === 'reporteCursos.html')) {
         item.classList.add('active');
       }
     });

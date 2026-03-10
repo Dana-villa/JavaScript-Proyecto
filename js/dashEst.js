@@ -12,7 +12,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const pageRoutes = {
     dashboard: "dashEst.html",
-    cursos: "gestionCursosEst.html"
+    cursos: "gestionCursosEst.html",
+    reporte: "reportesCursos.html"
   };
 
   menuItems.forEach(item => {

@@ -6,6 +6,7 @@ const RUTAS = {
 dashboard:"dashboard1.html",
 cursos:"gestionCursosAdm.html",
 docentes:"gestionDocentes.html",
+reporte: "reporteCursos.html";
 admin:"moduloAdm.html"
 };
 
