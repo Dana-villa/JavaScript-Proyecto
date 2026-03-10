@@ -145,7 +145,15 @@ const cursosData = [
   }
 ];
 
-// ── MODAL HTML ───────────────────────────────────────────────────────────────
+// ── NAVEGACIÓN: mapeo de rutas a URLs ─────────────────────────────────────────
+const routeMap = {
+  ashboard:  "../pages/dashAdm.html",
+  cursos:     "../pages/gestionCursosAdm.html",
+  docentes:   "../pages/gestionDocentes.html",
+  admin:      "../pages/moduloAdm.html"
+};
+
+// ── MODAL DE VER LECCIONES (HTML) ─────────────────────────────────────────────
 function crearModal() {
   const overlay = document.createElement("div");
   overlay.id = "modal-overlay";
@@ -156,27 +164,24 @@ function crearModal() {
           <path d="M4 4L16 16M16 4L4 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
         </svg>
       </button>
-
       <div class="modal-body" id="modal-body"></div>
     </div>
   `;
   document.body.appendChild(overlay);
 }
 
-// ── RENDER MODAL ─────────────────────────────────────────────────────────────
+// ── RENDER MODAL DE LECCIONES ─────────────────────────────────────────────────
 function abrirModal(cursoId) {
   const curso = cursosData.find(c => c.id === cursoId);
   if (!curso) return;
 
-  const overlay  = document.getElementById("modal-overlay");
-  const card     = document.getElementById("modal-card");
-  const body     = document.getElementById("modal-body");
+  const overlay = document.getElementById("modal-overlay");
+  const card    = document.getElementById("modal-card");
+  const body    = document.getElementById("modal-body");
 
-  // Color accent del curso
   card.style.setProperty("--curso-color", curso.color);
   card.style.setProperty("--curso-bg",    curso.colorBg);
 
-  // Módulos
   body.innerHTML = curso.modulos.map(mod => `
     <div class="modulo-item">
       <div class="modulo-icon-wrap" style="color:${curso.color}; background:${curso.colorBg}">
@@ -198,7 +203,6 @@ function abrirModal(cursoId) {
 
   overlay.classList.add("active");
   document.body.style.overflow = "hidden";
-  // pequeña animación de entrada
   requestAnimationFrame(() => card.classList.add("visible"));
 }
 
@@ -212,12 +216,323 @@ function cerrarModal() {
   }, 280);
 }
 
-// ── ESTILOS DEL MODAL (inyectados en <head>) ─────────────────────────────────
+// ── MODAL AÑADIR NUEVO MÓDULO ─────────────────────────────────────────────────
+function crearModalNuevoModulo() {
+  const overlay = document.createElement("div");
+  overlay.id = "modal-nuevo-overlay";
+  overlay.innerHTML = `
+    <div class="modal-nuevo-card" id="modal-nuevo-card" role="dialog" aria-modal="true" aria-labelledby="modal-nuevo-titulo">
+      <div class="modal-nuevo-header">
+        <div class="modal-nuevo-header-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
+            <path d="M12 5v14M5 12h14" stroke="#ffffff" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div>
+          <h2 class="modal-nuevo-titulo" id="modal-nuevo-titulo">Añadir Nuevo Módulo</h2>
+          <p class="modal-nuevo-subtitulo">Completa la información para crear el módulo</p>
+        </div>
+        <button class="modal-nuevo-close" id="modal-nuevo-close" aria-label="Cerrar">
+          <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+            <path d="M4 4L16 16M16 4L4 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <div class="modal-nuevo-body">
+        <!-- Nombre del curso -->
+        <div class="form-group">
+          <label class="form-label" for="nuevo-nombre">Nombre del Curso <span class="form-required">*</span></label>
+          <input type="text" id="nuevo-nombre" class="form-input" placeholder="Ej: Curso de Python para Principiantes" maxlength="80">
+        </div>
+
+        <!-- Descripción -->
+        <div class="form-group">
+          <label class="form-label" for="nuevo-desc">Descripción <span class="form-required">*</span></label>
+          <textarea id="nuevo-desc" class="form-input form-textarea" placeholder="Breve descripción del contenido del curso..." maxlength="200" rows="3"></textarea>
+        </div>
+
+        <!-- Color de acento -->
+        <div class="form-group">
+          <label class="form-label">Color de acento</label>
+          <div class="color-picker-row">
+            <div class="color-option selected" data-color="#0ea5e9" data-bg="#e0f7f9" style="background:#0ea5e9" title="Azul cielo"></div>
+            <div class="color-option" data-color="#0891b2" data-bg="#cffafe" style="background:#0891b2" title="Cyan"></div>
+            <div class="color-option" data-color="#7c3aed" data-bg="#ede9fe" style="background:#7c3aed" title="Violeta"></div>
+            <div class="color-option" data-color="#16a34a" data-bg="#dcfce7" style="background:#16a34a" title="Verde"></div>
+            <div class="color-option" data-color="#dc2626" data-bg="#fee2e2" style="background:#dc2626" title="Rojo"></div>
+            <div class="color-option" data-color="#d97706" data-bg="#fef3c7" style="background:#d97706" title="Ámbar"></div>
+            <div class="color-option" data-color="#db2777" data-bg="#fce7f3" style="background:#db2777" title="Rosa"></div>
+            <div class="color-option" data-color="#475569" data-bg="#f1f5f9" style="background:#475569" title="Gris pizarra"></div>
+          </div>
+        </div>
+
+        <!-- Lecciones -->
+        <div class="form-group">
+          <label class="form-label">Lecciones del módulo <span class="form-required">*</span></label>
+          <div id="lecciones-lista" class="lecciones-lista"></div>
+          <button type="button" class="btn-agregar-leccion" id="btn-agregar-leccion">
+            <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+              <path d="M10 4v12M4 10h12" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+            Agregar lección
+          </button>
+        </div>
+
+        <div id="form-error" class="form-error" style="display:none"></div>
+      </div>
+
+      <div class="modal-nuevo-footer">
+        <button type="button" class="btn-cancelar" id="btn-cancelar-nuevo">Cancelar</button>
+        <button type="button" class="btn-crear" id="btn-crear-modulo">
+          <svg width="16" height="16" viewBox="0 0 20 20" fill="none">
+            <path d="M4 10l4 4 8-8" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Crear Módulo
+        </button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+// Color seleccionado actualmente en el form
+let colorSeleccionado = { color: "#0ea5e9", bg: "#e0f7f9" };
+let leccionesCount = 0;
+
+function agregarFilaLeccion(texto = "") {
+  leccionesCount++;
+  const lista = document.getElementById("lecciones-lista");
+  const fila = document.createElement("div");
+  fila.className = "leccion-fila";
+  fila.dataset.id = leccionesCount;
+  fila.innerHTML = `
+    <span class="leccion-num">${lista.children.length + 1}</span>
+    <input type="text" class="form-input leccion-input" placeholder="Ej: Lección 1.1: Introducción al tema..." value="${texto}" maxlength="120">
+    <button type="button" class="btn-remove-leccion" aria-label="Eliminar lección">
+      <svg width="14" height="14" viewBox="0 0 20 20" fill="none">
+        <path d="M4 4l12 12M16 4L4 16" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"/>
+      </svg>
+    </button>
+  `;
+  fila.querySelector(".btn-remove-leccion").addEventListener("click", () => {
+    fila.remove();
+    renumerarLecciones();
+  });
+  lista.appendChild(fila);
+}
+
+function renumerarLecciones() {
+  document.querySelectorAll(".leccion-fila").forEach((f, i) => {
+    f.querySelector(".leccion-num").textContent = i + 1;
+  });
+}
+
+function abrirModalNuevo() {
+  const overlay = document.getElementById("modal-nuevo-overlay");
+  const card    = document.getElementById("modal-nuevo-card");
+
+  // Reset
+  document.getElementById("nuevo-nombre").value = "";
+  document.getElementById("nuevo-desc").value = "";
+  document.getElementById("lecciones-lista").innerHTML = "";
+  document.getElementById("form-error").style.display = "none";
+  leccionesCount = 0;
+  colorSeleccionado = { color: "#0ea5e9", bg: "#e0f7f9" };
+
+  // Reset color picker
+  document.querySelectorAll(".color-option").forEach(el => el.classList.remove("selected"));
+  document.querySelector('.color-option[data-color="#0ea5e9"]')?.classList.add("selected");
+
+  // Agregar 2 lecciones vacías por defecto
+  agregarFilaLeccion();
+  agregarFilaLeccion();
+
+  overlay.classList.add("active");
+  document.body.style.overflow = "hidden";
+  requestAnimationFrame(() => card.classList.add("visible"));
+}
+
+function cerrarModalNuevo() {
+  const overlay = document.getElementById("modal-nuevo-overlay");
+  const card    = document.getElementById("modal-nuevo-card");
+  card.classList.remove("visible");
+  setTimeout(() => {
+    overlay.classList.remove("active");
+    document.body.style.overflow = "";
+  }, 280);
+}
+
+function crearTarjetaCurso(curso) {
+  const article = document.createElement("article");
+  article.className = "course-card";
+  article.setAttribute("data-curso", curso.id);
+  article.setAttribute("role", "button");
+  article.setAttribute("tabindex", "0");
+  article.setAttribute("aria-label", `Ver lecciones: ${curso.titulo}`);
+
+  // Placeholder: bloque de color como thumbnail cuando no hay imagen propia
+  article.innerHTML = `
+    <div class="course-card__thumbnail" style="background: ${curso.colorBg}; display:flex; align-items:center; justify-content:center;">
+      <svg width="56" height="56" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="4" y="8" width="40" height="28" rx="4" stroke="${curso.color}" stroke-width="2.5"/>
+        <line x1="4" y1="16" x2="44" y2="16" stroke="${curso.color}" stroke-width="2"/>
+        <line x1="14" y1="24" x2="34" y2="24" stroke="${curso.color}" stroke-width="2" stroke-linecap="round"/>
+        <line x1="14" y1="29" x2="28" y2="29" stroke="${curso.color}" stroke-width="2" stroke-linecap="round"/>
+        <line x1="20" y1="36" x2="28" y2="36" stroke="${curso.color}" stroke-width="2" stroke-linecap="round"/>
+        <line x1="24" y1="36" x2="24" y2="40" stroke="${curso.color}" stroke-width="2" stroke-linecap="round"/>
+        <line x1="16" y1="40" x2="32" y2="40" stroke="${curso.color}" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+    </div>
+    <div class="course-card__body">
+      <h3 class="course-card__title">${curso.titulo}</h3>
+      <p class="course-card__desc">${curso.descripcion}</p>
+    </div>
+  `;
+
+  article.addEventListener("click", () => abrirModal(curso.id));
+  article.addEventListener("keydown", e => {
+    if (e.key === "Enter" || e.key === " ") { e.preventDefault(); abrirModal(curso.id); }
+  });
+
+  return article;
+}
+
+function procesarNuevoModulo() {
+  const nombre = document.getElementById("nuevo-nombre").value.trim();
+  const desc   = document.getElementById("nuevo-desc").value.trim();
+  const errorEl = document.getElementById("form-error");
+
+  // Obtener lecciones
+  const inputs = document.querySelectorAll(".leccion-input");
+  const lecciones = Array.from(inputs)
+    .map(inp => inp.value.trim())
+    .filter(v => v.length > 0);
+
+  // Validación
+  if (!nombre) {
+    mostrarError(errorEl, "El nombre del curso es obligatorio.");
+    return;
+  }
+  if (!desc) {
+    mostrarError(errorEl, "La descripción es obligatoria.");
+    return;
+  }
+  if (lecciones.length === 0) {
+    mostrarError(errorEl, "Debes agregar al menos una lección.");
+    return;
+  }
+
+  errorEl.style.display = "none";
+
+  // Generar ID único
+  const nuevoId = "curso-" + Date.now();
+
+  // Crear estructura de módulo único
+  const nuevoCurso = {
+    id: nuevoId,
+    titulo: nombre,
+    descripcion: desc,
+    imagen: null,
+    color: colorSeleccionado.color,
+    colorBg: colorSeleccionado.bg,
+    modulos: [
+      {
+        numero: 1,
+        titulo: nombre,
+        icono: `<svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="4" y="8" width="40" height="28" rx="4" stroke="${colorSeleccionado.color}" stroke-width="2.5"/>
+          <line x1="4" y1="16" x2="44" y2="16" stroke="${colorSeleccionado.color}" stroke-width="2"/>
+          <line x1="14" y1="24" x2="34" y2="24" stroke="${colorSeleccionado.color}" stroke-width="2" stroke-linecap="round"/>
+          <line x1="14" y1="29" x2="28" y2="29" stroke="${colorSeleccionado.color}" stroke-width="2" stroke-linecap="round"/>
+        </svg>`,
+        lecciones
+      }
+    ]
+  };
+
+  // Agregar a datos globales
+  cursosData.push(nuevoCurso);
+
+  // Crear y agregar tarjeta al grid
+  const grid  = document.querySelector(".courses-grid");
+  const tarjeta = crearTarjetaCurso(nuevoCurso);
+  grid.appendChild(tarjeta);
+
+  cerrarModalNuevo();
+  mostrarToast("¡Módulo creado exitosamente!");
+}
+
+function mostrarError(el, msg) {
+  el.textContent = msg;
+  el.style.display = "block";
+  el.style.animation = "none";
+  requestAnimationFrame(() => { el.style.animation = ""; });
+}
+
+// ── TOAST NOTIFICATION ────────────────────────────────────────────────────────
+function mostrarToast(mensaje) {
+  let toast = document.getElementById("app-toast");
+  if (!toast) {
+    toast = document.createElement("div");
+    toast.id = "app-toast";
+    document.body.appendChild(toast);
+  }
+  toast.textContent = mensaje;
+  toast.classList.add("toast-show");
+  setTimeout(() => toast.classList.remove("toast-show"), 3000);
+}
+
+// ── MODAL DE CONFIRMACIÓN CERRAR SESIÓN ───────────────────────────────────────
+function crearModalCerrarSesion() {
+  const overlay = document.createElement("div");
+  overlay.id = "modal-sesion-overlay";
+  overlay.innerHTML = `
+    <div class="modal-sesion-card" id="modal-sesion-card" role="dialog" aria-modal="true">
+      <div class="modal-sesion-icon">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
+          <path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+          <polyline points="16 17 21 12 16 7" stroke="#ef4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <line x1="21" y1="12" x2="9" y2="12" stroke="#ef4444" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h3 class="modal-sesion-titulo">¿Cerrar sesión?</h3>
+      <p class="modal-sesion-desc">Serás redirigido a la página de inicio de sesión. ¿Deseas continuar?</p>
+      <div class="modal-sesion-btns">
+        <button class="btn-sesion-cancelar" id="btn-sesion-cancelar">Cancelar</button>
+        <button class="btn-sesion-confirmar" id="btn-sesion-confirmar">Cerrar sesión</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+function abrirModalSesion() {
+  const overlay = document.getElementById("modal-sesion-overlay");
+  const card    = document.getElementById("modal-sesion-card");
+  overlay.classList.add("active");
+  document.body.style.overflow = "hidden";
+  requestAnimationFrame(() => card.classList.add("visible"));
+}
+
+function cerrarModalSesion() {
+  const overlay = document.getElementById("modal-sesion-overlay");
+  const card    = document.getElementById("modal-sesion-card");
+  card.classList.remove("visible");
+  setTimeout(() => {
+    overlay.classList.remove("active");
+    document.body.style.overflow = "";
+  }, 280);
+}
+
+// ── ESTILOS INYECTADOS ────────────────────────────────────────────────────────
 function inyectarEstilosModal() {
   const style = document.createElement("style");
   style.textContent = `
-    /* ── OVERLAY ── */
-    #modal-overlay {
+    /* ── OVERLAY GENÉRICO ── */
+    #modal-overlay,
+    #modal-nuevo-overlay,
+    #modal-sesion-overlay {
       position: fixed;
       inset: 0;
       background: rgba(15, 23, 42, 0.55);
@@ -228,9 +543,11 @@ function inyectarEstilosModal() {
       justify-content: center;
       padding: 24px;
     }
-    #modal-overlay.active { display: flex; }
+    #modal-overlay.active,
+    #modal-nuevo-overlay.active,
+    #modal-sesion-overlay.active { display: flex; }
 
-    /* ── CARD ── */
+    /* ── CARD VER LECCIONES ── */
     .modal-card {
       background: #fff;
       border-radius: 20px;
@@ -244,17 +561,11 @@ function inyectarEstilosModal() {
       transform: translateY(24px) scale(0.97);
       transition: opacity 0.28s ease, transform 0.28s ease;
     }
-    .modal-card.visible {
-      opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-
-    /* Scrollbar dentro del modal */
+    .modal-card.visible { opacity: 1; transform: translateY(0) scale(1); }
     .modal-card::-webkit-scrollbar { width: 6px; }
     .modal-card::-webkit-scrollbar-track { background: transparent; }
     .modal-card::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
 
-    /* ── CERRAR ── */
     .modal-close {
       position: sticky;
       top: 14px;
@@ -263,131 +574,234 @@ function inyectarEstilosModal() {
       background: #f1f5f9;
       border: none;
       border-radius: 50%;
-      width: 36px;
-      height: 36px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: 36px; height: 36px;
+      display: flex; align-items: center; justify-content: center;
       cursor: pointer;
       color: #64748b;
       transition: background 0.18s, color 0.18s;
       z-index: 10;
-      flex-shrink: 0;
     }
     .modal-close:hover { background: #e2e8f0; color: #1e293b; }
 
-    /* ── HEADER ── */
-    .modal-header {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      padding: 20px 24px 18px;
-      margin-top: -36px; /* compensa el botón flotante */
-      padding-top: 14px;
-    }
-    .modal-header-thumb {
-      width: 88px;
-      height: 62px;
-      border-radius: 10px;
-      overflow: hidden;
-      flex-shrink: 0;
-      background: #1e293b;
-    }
-    .modal-header-thumb img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-    .modal-header-info { flex: 1; }
-    .modal-titulo {
-      font-size: 17px;
-      font-weight: 700;
-      color: #111827;
-      line-height: 1.25;
-      margin-bottom: 5px;
-    }
-    .modal-desc {
-      font-size: 13px;
-      color: #6b7280;
-      line-height: 1.5;
-    }
-
-    /* ── BODY ── */
     .modal-body {
       padding: 6px 24px 28px;
-      display: flex;
-      flex-direction: column;
-      gap: 16px;
+      display: flex; flex-direction: column; gap: 16px;
     }
-
-    /* ── MÓDULO ── */
     .modulo-item {
-      display: flex;
-      margin-top: 20px;
-      align-items: flex-start;
-      gap: 14px;
-      padding: 14px 16px;
-      border-radius: 12px;
-      background: #f8fafc;
-      border: 1px solid #e8edf3;
+      display: flex; margin-top: 20px; align-items: flex-start;
+      gap: 14px; padding: 14px 16px; border-radius: 12px;
+      background: #f8fafc; border: 1px solid #e8edf3;
       transition: background 0.18s, box-shadow 0.18s;
     }
-    .modulo-item:hover {
-      background: var(--curso-bg, #f0f9ff);
-      box-shadow: 0 2px 10px rgba(0,0,0,0.07);
-    }
+    .modulo-item:hover { background: var(--curso-bg, #f0f9ff); box-shadow: 0 2px 10px rgba(0,0,0,0.07); }
     .modulo-icon-wrap {
-      width: 44px;
-      height: 44px;
-      border-radius: 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-shrink: 0;
-      padding: 8px;
+      width: 44px; height: 44px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0; padding: 8px;
     }
     .modulo-icon-wrap svg { width: 100%; height: 100%; }
     .modulo-content { flex: 1; }
-    .modulo-titulo {
-      font-size: 13.5px;
-      font-weight: 700;
-      color: #1e293b;
-      margin-bottom: 8px;
-      line-height: 1.3;
+    .modulo-titulo { font-size: 13.5px; font-weight: 700; color: #1e293b; margin-bottom: 8px; line-height: 1.3; }
+    .modulo-lecciones { list-style: none; display: flex; flex-direction: column; gap: 5px; }
+    .modulo-lecciones li { font-size: 12.5px; color: #475569; display: flex; align-items: flex-start; gap: 7px; line-height: 1.45; }
+    .leccion-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 5px; }
+
+    /* ── CARD NUEVO MÓDULO ── */
+    .modal-nuevo-card {
+      background: #fff;
+      border-radius: 20px;
+      width: 100%;
+      max-width: 560px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.22);
+      opacity: 0;
+      transform: translateY(24px) scale(0.97);
+      transition: opacity 0.28s ease, transform 0.28s ease;
     }
-    .modulo-lecciones {
-      list-style: none;
-      display: flex;
-      flex-direction: column;
-      gap: 5px;
+    .modal-nuevo-card.visible { opacity: 1; transform: translateY(0) scale(1); }
+    .modal-nuevo-card::-webkit-scrollbar { width: 6px; }
+    .modal-nuevo-card::-webkit-scrollbar-track { background: transparent; }
+    .modal-nuevo-card::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 99px; }
+
+    .modal-nuevo-header {
+      display: flex; align-items: center; gap: 14px;
+      padding: 20px 20px 18px;
+      border-bottom: 1px solid #f1f5f9;
+      position: sticky; top: 0; background: #fff; z-index: 5;
+      border-radius: 20px 20px 0 0;
     }
-    .modulo-lecciones li {
-      font-size: 12.5px;
-      color: #475569;
-      display: flex;
-      align-items: flex-start;
-      gap: 7px;
-      line-height: 1.45;
-    }
-    .leccion-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
+    .modal-nuevo-header-icon {
+      width: 40px; height: 40px; border-radius: 10px;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      display: flex; align-items: center; justify-content: center;
       flex-shrink: 0;
-      margin-top: 5px;
     }
+    .modal-nuevo-titulo { font-size: 16px; font-weight: 700; color: #111827; margin: 0; }
+    .modal-nuevo-subtitulo { font-size: 12px; color: #6b7280; margin: 2px 0 0; }
+    .modal-nuevo-close {
+      margin-left: auto; background: #f1f5f9; border: none;
+      border-radius: 50%; width: 32px; height: 32px;
+      display: flex; align-items: center; justify-content: center;
+      cursor: pointer; color: #64748b;
+      transition: background 0.18s, color 0.18s;
+    }
+    .modal-nuevo-close:hover { background: #e2e8f0; color: #1e293b; }
+
+    .modal-nuevo-body { padding: 20px 22px 8px; display: flex; flex-direction: column; gap: 18px; }
+
+    .form-group { display: flex; flex-direction: column; gap: 7px; }
+    .form-label { font-size: 13px; font-weight: 600; color: #374151; }
+    .form-required { color: #ef4444; }
+    .form-input {
+      width: 100%; padding: 10px 13px;
+      border: 1.5px solid #e5e7eb; border-radius: 9px;
+      font-size: 13.5px; color: #111827;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.18s, box-shadow 0.18s;
+      outline: none;
+    }
+    .form-input:focus { border-color: #2563eb; box-shadow: 0 0 0 3px rgba(37,99,235,0.1); }
+    .form-textarea { resize: vertical; min-height: 72px; }
+
+    /* Color picker */
+    .color-picker-row { display: flex; gap: 10px; flex-wrap: wrap; }
+    .color-option {
+      width: 30px; height: 30px; border-radius: 50%;
+      cursor: pointer; border: 2.5px solid transparent;
+      transition: transform 0.15s, border-color 0.15s;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.15);
+    }
+    .color-option:hover { transform: scale(1.15); }
+    .color-option.selected { border-color: #1e293b; transform: scale(1.1); }
+
+    /* Lecciones */
+    .lecciones-lista { display: flex; flex-direction: column; gap: 8px; }
+    .leccion-fila {
+      display: flex; align-items: center; gap: 8px;
+    }
+    .leccion-num {
+      min-width: 22px; height: 22px; border-radius: 50%;
+      background: #e5e7eb; color: #374151;
+      font-size: 11px; font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .leccion-input { flex: 1; padding: 8px 11px; font-size: 13px; }
+    .btn-remove-leccion {
+      background: none; border: none; cursor: pointer;
+      color: #9ca3af; padding: 4px; border-radius: 6px;
+      transition: color 0.15s, background 0.15s;
+      display: flex; align-items: center;
+    }
+    .btn-remove-leccion:hover { color: #ef4444; background: #fee2e2; }
+
+    .btn-agregar-leccion {
+      display: flex; align-items: center; gap: 6px;
+      margin-top: 6px; padding: 8px 14px;
+      background: none; border: 1.5px dashed #d1d5db;
+      border-radius: 8px; cursor: pointer;
+      font-size: 13px; color: #6b7280;
+      font-family: 'Inter', sans-serif;
+      transition: border-color 0.18s, color 0.18s, background 0.18s;
+      width: 100%;
+    }
+    .btn-agregar-leccion:hover { border-color: #2563eb; color: #2563eb; background: #eff6ff; }
+
+    .form-error {
+      background: #fef2f2; border: 1px solid #fecaca;
+      color: #dc2626; border-radius: 8px;
+      padding: 9px 13px; font-size: 13px;
+      animation: shake 0.3s ease;
+    }
+    @keyframes shake {
+      0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)}
+    }
+
+    .modal-nuevo-footer {
+      display: flex; align-items: center; justify-content: flex-end; gap: 10px;
+      padding: 16px 22px 20px;
+      border-top: 1px solid #f1f5f9;
+    }
+    .btn-cancelar {
+      padding: 10px 20px; background: none; border: 1.5px solid #e5e7eb;
+      border-radius: 9px; font-size: 14px; font-weight: 500;
+      color: #374151; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.18s, border-color 0.18s;
+    }
+    .btn-cancelar:hover { background: #f9fafb; border-color: #d1d5db; }
+    .btn-crear {
+      display: flex; align-items: center; gap: 7px;
+      padding: 10px 22px; background: #2563eb; border: none;
+      border-radius: 9px; font-size: 14px; font-weight: 600;
+      color: #fff; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.18s, transform 0.15s;
+    }
+    .btn-crear:hover { background: #1d4ed8; transform: translateY(-1px); }
+
+    /* ── MODAL CERRAR SESIÓN ── */
+    .modal-sesion-card {
+      background: #fff; border-radius: 18px;
+      width: 100%; max-width: 380px;
+      padding: 32px 28px 26px;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+      text-align: center;
+      opacity: 0; transform: translateY(20px) scale(0.97);
+      transition: opacity 0.28s ease, transform 0.28s ease;
+    }
+    .modal-sesion-card.visible { opacity: 1; transform: translateY(0) scale(1); }
+    .modal-sesion-icon {
+      width: 56px; height: 56px; border-radius: 50%;
+      background: #fef2f2; display: flex;
+      align-items: center; justify-content: center;
+      margin: 0 auto 16px;
+    }
+    .modal-sesion-titulo { font-size: 18px; font-weight: 700; color: #111827; margin: 0 0 8px; }
+    .modal-sesion-desc { font-size: 13.5px; color: #6b7280; line-height: 1.6; margin: 0 0 24px; }
+    .modal-sesion-btns { display: flex; gap: 10px; }
+    .btn-sesion-cancelar {
+      flex: 1; padding: 11px;
+      background: none; border: 1.5px solid #e5e7eb;
+      border-radius: 9px; font-size: 14px; font-weight: 500;
+      color: #374151; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.18s;
+    }
+    .btn-sesion-cancelar:hover { background: #f9fafb; }
+    .btn-sesion-confirmar {
+      flex: 1; padding: 11px;
+      background: #ef4444; border: none;
+      border-radius: 9px; font-size: 14px; font-weight: 600;
+      color: #fff; cursor: pointer;
+      font-family: 'Inter', sans-serif;
+      transition: background 0.18s;
+    }
+    .btn-sesion-confirmar:hover { background: #dc2626; }
+
+    /* ── TOAST ── */
+    #app-toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: #111827; color: #fff;
+      padding: 12px 24px; border-radius: 10px;
+      font-size: 14px; font-weight: 500;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+      z-index: 2000; opacity: 0;
+      transition: opacity 0.25s, transform 0.25s;
+      white-space: nowrap;
+    }
+    #app-toast.toast-show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 520px) {
-      .modal-card { border-radius: 14px; }
-      .modal-header { flex-direction: column; }
-      .modal-header-thumb { width: 100%; height: 120px; }
+      .modal-card, .modal-nuevo-card { border-radius: 14px; }
     }
   `;
   document.head.appendChild(style);
 }
 
-// ── VINCULAR TARJETAS CON CURSOS ──────────────────────────────────────────────
+// ── VINCULAR TARJETAS EXISTENTES ──────────────────────────────────────────────
 function vincularTarjetas() {
   const tarjetas = document.querySelectorAll(".course-card");
   const ids = ["desarrollo-web", "javascript", "inteligencia-artificial"];
@@ -399,7 +813,7 @@ function vincularTarjetas() {
     card.setAttribute("data-curso", id);
     card.setAttribute("role", "button");
     card.setAttribute("tabindex", "0");
-    card.setAttribute("aria-label", `Ver lecciones: ${cursosData.find(c=>c.id===id)?.titulo}`);
+    card.setAttribute("aria-label", `Ver lecciones: ${cursosData.find(c => c.id === id)?.titulo}`);
 
     card.addEventListener("click", () => abrirModal(id));
     card.addEventListener("keydown", e => {
@@ -412,8 +826,24 @@ function vincularTarjetas() {
 function initSidebar() {
   document.querySelectorAll(".menu-item").forEach(item => {
     item.addEventListener("click", () => {
+      const path = item.dataset.path;
+
+      // Marcar activo visualmente
       document.querySelectorAll(".menu-item").forEach(m => m.classList.remove("active"));
       item.classList.add("active");
+
+      // Navegar si tiene ruta definida y no es la actual
+      if (path && routeMap[path]) {
+        // Si es la misma página, no navegar
+        const currentPage = window.location.pathname.split("/").pop();
+        const targetPage  = routeMap[path].split("/").pop();
+        if (currentPage !== targetPage) {
+          // Pequeño delay para ver el efecto visual
+          setTimeout(() => {
+            window.location.href = routeMap[path];
+          }, 120);
+        }
+      }
     });
   });
 }
@@ -422,19 +852,67 @@ function initSidebar() {
 function initBtnAdd() {
   const btn = document.querySelector(".btn-add");
   if (!btn) return;
-  btn.addEventListener("click", () => {
-    alert("Función para añadir nuevo módulo (en desarrollo).");
+  btn.addEventListener("click", abrirModalNuevo);
+}
+
+// ── EVENTOS MODAL NUEVO MÓDULO ────────────────────────────────────────────────
+function initEventosModalNuevo() {
+  // Cerrar
+  document.getElementById("modal-nuevo-close").addEventListener("click", cerrarModalNuevo);
+  document.getElementById("btn-cancelar-nuevo").addEventListener("click", cerrarModalNuevo);
+  document.getElementById("modal-nuevo-overlay").addEventListener("click", e => {
+    if (e.target === e.currentTarget) cerrarModalNuevo();
+  });
+
+  // Agregar lección
+  document.getElementById("btn-agregar-leccion").addEventListener("click", () => {
+    agregarFilaLeccion();
+  });
+
+  // Crear módulo
+  document.getElementById("btn-crear-modulo").addEventListener("click", procesarNuevoModulo);
+
+  // Color picker
+  document.querySelectorAll(".color-option").forEach(opt => {
+    opt.addEventListener("click", () => {
+      document.querySelectorAll(".color-option").forEach(o => o.classList.remove("selected"));
+      opt.classList.add("selected");
+      colorSeleccionado = {
+        color: opt.dataset.color,
+        bg: opt.dataset.bg
+      };
+    });
   });
 }
 
-// ── CERRAR MODAL (overlay click / botón / Escape) ─────────────────────────────
+// ── CERRAR MODAL LECCIONES ────────────────────────────────────────────────────
 function initCerrarModal() {
   document.getElementById("modal-close").addEventListener("click", cerrarModal);
   document.getElementById("modal-overlay").addEventListener("click", e => {
     if (e.target === e.currentTarget) cerrarModal();
   });
   document.addEventListener("keydown", e => {
-    if (e.key === "Escape") cerrarModal();
+    if (e.key === "Escape") {
+      cerrarModal();
+      cerrarModalNuevo();
+      cerrarModalSesion();
+    }
+  });
+}
+
+// ── CERRAR SESIÓN ─────────────────────────────────────────────────────────────
+function initCerrarSesion() {
+  const btn = document.querySelector(".cerrar-sesion");
+  if (!btn) return;
+  btn.addEventListener("click", abrirModalSesion);
+
+  document.getElementById("btn-sesion-cancelar").addEventListener("click", cerrarModalSesion);
+  document.getElementById("modal-sesion-overlay").addEventListener("click", e => {
+    if (e.target === e.currentTarget) cerrarModalSesion();
+  });
+  document.getElementById("btn-sesion-confirmar").addEventListener("click", () => {
+    // Redirige al login — ajusta la ruta según tu estructura de carpetas
+    window.location.href = "../pages/loginPage.html";
   });
 }
 
@@ -444,7 +922,7 @@ function initNotificacion() {
   if (!bell) return;
   bell.addEventListener("click", () => {
     const badge = bell.querySelector(".notificacion-badge");
-    if (badge) { badge.style.display = "none"; }
+    if (badge) badge.style.display = "none";
   });
 }
 
@@ -452,8 +930,12 @@ function initNotificacion() {
 document.addEventListener("DOMContentLoaded", () => {
   inyectarEstilosModal();
   crearModal();
+  crearModalNuevoModulo();
+  crearModalCerrarSesion();
   vincularTarjetas();
   initCerrarModal();
+  initEventosModalNuevo();
+  initCerrarSesion();
   initSidebar();
   initBtnAdd();
   initNotificacion();
